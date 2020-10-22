@@ -34,7 +34,7 @@ public class Client {
 		this.quit = false;
 		this.begin();
 	}
-	
+
 	private void begin() throws UnknownHostException, IOException {
 		Scanner scn = new Scanner(System.in);
 		Thread inCmd = new Thread(new Runnable() {
@@ -61,8 +61,10 @@ public class Client {
 		});
 		Thread outCmd = new Thread(new Runnable() {
 			Scanner scn = new Scanner(System.in);
+
 			@Override
 			public void run() {
+				scn.useDelimiter("\n");
 				while (!quit) {
 					do {
 						int numCmd = scn.nextInt();
@@ -317,7 +319,7 @@ public class Client {
 			break;
 		}
 	}
-	
+
 	private void printMenuAndInfos() {
 		System.out.println("\nUtilisateur : " + this.name);
 		if (this.s == null)
@@ -336,7 +338,7 @@ public class Client {
 		System.out.println("9 : Supprimer annonce.");
 		System.out.println("Que voulez-vous faire ?");
 	}
-	
+
 	private void closeConnexion() throws IOException {
 		this.pw.close();
 		this.is.close();
@@ -344,7 +346,7 @@ public class Client {
 		this.s.close();
 		this.isConnected = false;
 	}
-	
+
 	private void openConnexion() throws UnknownHostException, IOException {
 		this.s = new Socket("127.0.0.1", port);
 		this.is = this.s.getInputStream();
@@ -356,5 +358,5 @@ public class Client {
 	public static void main(String[] args ) throws IOException {
 		Client c = new Client(1027, "toto");
 	}
-	
+
 }
