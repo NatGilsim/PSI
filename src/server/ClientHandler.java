@@ -22,63 +22,83 @@ public class ClientHandler implements Runnable {
 		this.is = s.getInputStream();
 		this.os = s.getOutputStream();
 		this.pw = new PrintWriter(this.os, true);
+		this.client = new ClientServer();
 	}
 	
 	@Override
 	public void run() {
-		String cmd = null, input = null;
+		String cmd = "", input = "";
 		BufferedReader buffReader = new BufferedReader(new InputStreamReader(is));
 		while (!s.isClosed()) {
 			cmd = "";
 			try {
 				do {
 					input = buffReader.readLine();
-					cmd += input + "\n";
-				} while (!input.equals("."));
+					if (input != null) {
+						cmd += input + "\n";
+					} else {
+						this.closeConnexion();
+						System.out.println("[Serveur] Client " + this.client.getName() + " s'est déconnecté (" + this.client.getToken() + ").");
+						Server.delHandler(this);
+					}
+				} while (input != null && !input.equals("."));
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
 			try {
-				processInput(cmd);
+				if (input != null)
+					processInput(cmd);
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
 		}
+		try {
+			is.close();
+			os.close();
+			s.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		pw.close();
 	}
 	
 	protected void processInput(String input) throws IOException {
 		String[] parsed = input.split("\n");
 		switch(parsed[0]) {
 		case "CONNECT":
-			if (parsed[1].length() >= 50) {
-				this.pw.println("CONNECT_KO");
-				this.pw.println(".");
-			}
-			if (Server.tokenExists(parsed[1])) {
-				this.client = Server.getClientFromToken(parsed[1]);
-				System.out.println("[Serveur] Utilisateur " + this.client.getName() + " connecté grâce à son token (" + this.client.getToken() + ").");
-				this.pw.println("CONNECT_OK");
-				this.pw.println(".");
-			} else {
-				if (parsed[1].substring(0, 1).equals("#")) {
-					System.out.println("[Client] Création d'utilisateur refusé : le nom ne doit pas commencer par un dièse.");
-					this.pw.println("CONNECT_NEW_USER_KO");
+			if (!this.client.getIsConnected()) {
+				if (parsed[1].length() >= 50) {
+					this.pw.println("CONNECT_KO");
+					this.pw.println(".");
+				}
+				if (Server.tokenExists(parsed[1])) {
+					this.client = Server.getClientFromToken(parsed[1]);
+					System.out.println("[Serveur] Utilisateur " + this.client.getName() + " connecté grâce à son token (" + this.client.getToken() + ").");
+					this.client.setIsConnected(true);
+					this.pw.println("CONNECT_OK");
 					this.pw.println(".");
 				} else {
-					ClientServer newClientServer = new ClientServer(parsed[1], Server.createToken());
-					this.client = newClientServer;
-					Server.clients.add(newClientServer);
-					System.out.println("[Serveur] Nouveau token créé (" + this.client.getToken() + ") pour l'utilisateur " + this.client.getName() + " qui est connecté.");
-					this.pw.println("CONNECT_NEW_USER_OK");
-					this.pw.println(this.client.getToken());
-					this.pw.println(".");
+					if (parsed[1].substring(0, 1).equals("#") || Server.userExists(parsed[1])) {
+						System.out.println("[Serveur] Création d'utilisateur refusé : le nom ne doit pas commencer par un dièse ou est déjà utilisé.");
+						this.pw.println("CONNECT_NEW_USER_KO");
+						this.pw.println(".");
+					} else {
+						ClientServer newClientServer = new ClientServer(parsed[1], Server.createToken());
+						this.client = newClientServer;
+						Server.clients.add(newClientServer);
+						System.out.println("[Serveur] Nouveau token créé (" + this.client.getToken() + ") pour l'utilisateur " + this.client.getName() + " qui est connecté.");
+						this.client.setIsConnected(true);
+						this.pw.println("CONNECT_NEW_USER_OK");
+						this.pw.println(this.client.getToken());
+						this.pw.println(".");
+					}
 				}
 			}
 			break;
 		case "DISCONNECT":
 			this.closeConnexion();
 			System.out.println("[Serveur] Client " + this.client.getName() + " s'est déconnecté (" + this.client.getToken() + ").");
-			Server.handlers.remove(this);
+			Server.delHandler(this);
 			break;
 		case "POST_ANC":
 			int prixAnnonce = Integer.valueOf(parsed[4]);
@@ -109,7 +129,7 @@ public class ClientHandler implements Runnable {
 			}
 			break;
 		case "REQUEST_ANC":
-			if (!Server.existsDomain(parsed[1])) {
+			if (!Server.domainExists(parsed[1])) {
 				System.out.println("[Serveur] Echec de l'envoie des annonces d'un domaine au client " + this.client.getName() + " : domaine inexistant.");
 				this.pw.println("SEND_ANC_KO");
 				this.pw.println(".");
@@ -197,6 +217,7 @@ public class ClientHandler implements Runnable {
 		this.is.close();
 		this.os.close();
 		this.s.close();
+		this.client.setIsConnected(false);
 	}
 	
 	private boolean addAnnonce(Domain dom, String titre, String description, int prix, int id) {

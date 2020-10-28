@@ -27,23 +27,31 @@ public class Server {
 			System.out.println("[Serveur] Nouvelle requête client : " + s);
 			ClientHandler ch = new ClientHandler(s);
 			Thread t = new Thread(ch);
-			Server.handlers.add(ch);
-			System.out.println("[Serveur] Nouvelle connexion géré par le serveur.");
+			Server.addHandler(ch);
 			t.start();
 		}
 	}
 	
 	public static synchronized boolean addHandler(ClientHandler ch) {
+		System.out.println("[Serveur] Nouvelle connexion géré par le serveur.");
 		return Server.handlers.add(ch);
 	}
-	
+
 	public static synchronized boolean delHandler(ClientHandler ch) {
+		System.out.println("[Serveur] Une connexion a été arrêtée.");
 		return Server.handlers.remove(ch);
 	}
-	
+
 	public static synchronized boolean tokenExists(String newToken) {
 		for (ClientServer cs : Server.clients)
 			if (newToken.equals(cs.getToken()))
+				return true;
+		return false;
+	}
+	
+	public static synchronized boolean userExists(String newUser) {
+		for (ClientServer cs : Server.clients)
+			if (cs.getName().equals(newUser))
 				return true;
 		return false;
 	}
@@ -64,7 +72,7 @@ public class Server {
 			}
 		}
 	}
-	
+
 	public static synchronized int nbrAnnonces(String domain) {
 		int cnt = 0;
 		for (ClientServer cs : Server.clients) {
@@ -76,14 +84,14 @@ public class Server {
 		}
 		return cnt;
 	}
-	
-	public static synchronized boolean existsDomain(String domain) {
+
+	public static synchronized boolean domainExists(String domain) {
 		for (Domain d : Domain.values())
 			if (d.name().equals(domain))
 				return true;
 		return false;
 	}
-	
+
 	public static synchronized String createToken() {
 		return "#" + (++Server.idClient);
 	}
