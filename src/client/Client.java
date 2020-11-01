@@ -148,7 +148,7 @@ public class Client {
 								descriptif = scn.next();
 								System.out.println("Prix ?");
 								prix = scn.next();
-								while (!prix.matches("^[0-9]+\\.[0-9]{0,2}")) {
+								while (!prix.matches("^[0-9]+\\.?[0-9]{0,2}")) {
 									System.out.println("Saisissez un prix valide.");
 									System.out.println("Prix ?");
 									prix = scn.next();
@@ -217,7 +217,7 @@ public class Client {
 								System.out.println("[Client] Commande inconnue.");
 								break;
 							}
-						} 
+						}
 					} while (isConnected);
 				}
 			}

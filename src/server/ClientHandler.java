@@ -16,7 +16,7 @@ public class ClientHandler implements Runnable {
 	private OutputStream os = null;
 	private PrintWriter pw = null;
 	private ClientServer client = null;
-	
+
 	public ClientHandler(Socket s) throws IOException {
 		this.s = s;
 		this.is = s.getInputStream();
@@ -24,7 +24,7 @@ public class ClientHandler implements Runnable {
 		this.pw = new PrintWriter(this.os, true);
 		this.client = new ClientServer();
 	}
-	
+
 	@Override
 	public void run() {
 		String cmd = "", input = "";
@@ -61,7 +61,7 @@ public class ClientHandler implements Runnable {
 		}
 		pw.close();
 	}
-	
+
 	protected void processInput(String input) throws IOException {
 		System.out.println("Requête reçue : <" + input + ">");
 		String[] parsed = input.split("\n");
@@ -102,7 +102,7 @@ public class ClientHandler implements Runnable {
 			Server.delHandler(this);
 			break;
 		case "POST_ANC":
-			int prixAnnonce = Integer.valueOf(parsed[4]);
+			float prixAnnonce = Float.valueOf(parsed[4]);
 			int idAnnonce = Server.createIdAnnonce();
 			System.out.println(Domain.valueOf(parsed[1]));
 			if (this.addAnnonce(Domain.valueOf(parsed[1]), parsed[2], parsed[3], prixAnnonce, idAnnonce)) {
@@ -148,7 +148,7 @@ public class ClientHandler implements Runnable {
 							this.pw.println(a.getDomain().name());
 							this.pw.println(a.getTitre());
 							this.pw.println(a.getDescriptif());
-							this.pw.println(Integer.toString(a.getPrix()));
+							this.pw.println(Float.toString(a.getPrix()));
 						}
 					}
 				}
@@ -170,7 +170,7 @@ public class ClientHandler implements Runnable {
 					this.pw.println(a.getDomain().name());
 					this.pw.println(a.getTitre());
 					this.pw.println(a.getDescriptif());
-					this.pw.println(Integer.toString(a.getPrix()));
+					this.pw.println(Float.toString(a.getPrix()));
 				}
 				this.pw.println(".");
 			}
@@ -212,7 +212,7 @@ public class ClientHandler implements Runnable {
 			break;
 		}
 	}
-	
+
 	private void closeConnexion() throws IOException {
 		this.pw.close();
 		this.is.close();
@@ -220,8 +220,8 @@ public class ClientHandler implements Runnable {
 		this.s.close();
 		this.client.setIsConnected(false);
 	}
-	
-	private boolean addAnnonce(Domain dom, String titre, String description, int prix, int id) {
+
+	private boolean addAnnonce(Domain dom, String titre, String description, float prix, int id) {
 		return this.client.addAnnonce(dom, titre, description, prix, id);
 	}
 
