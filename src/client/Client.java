@@ -154,7 +154,7 @@ public class Client {
 									prix = scn.next();
 								}
 								pw.println("POST_ANC");
-								pw.println(domain);
+								pw.println(domain.toLowerCase());
 								pw.println(title);
 								pw.println(descriptif);
 								pw.println(prix);

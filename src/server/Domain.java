@@ -1,8 +1,8 @@
 package server;
 
 public enum Domain {
-	Téléphone,
-	Voiture,
-	Maison,
-	Appartement
+	téléphone,
+	voiture,
+	maison,
+	appartement
 }
