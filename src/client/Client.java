@@ -101,15 +101,17 @@ public class Client {
 									if (!isConnected) {
 										break;
 									}
-								}
-								if (token == null) {
-									pw.println("CONNECT");
-									pw.println(name);
-									pw.println(".");
+									if (token == null) {
+										pw.println("CONNECT");
+										pw.println(name);
+										pw.println(".");
+									} else {
+										pw.println("CONNECT");
+										pw.println(token);
+										pw.println(".");
+									}
 								} else {
-									pw.println("CONNECT");
-									pw.println(token);
-									pw.println(".");
+									System.out.println("[Client] Vous êtes déjà connecté au serveur.");
 								}
 								break;
 							case 2:

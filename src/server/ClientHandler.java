@@ -22,6 +22,7 @@ public class ClientHandler implements Runnable {
 		this.is = s.getInputStream();
 		this.os = s.getOutputStream();
 		this.pw = new PrintWriter(this.os, true);
+		this.s.setSoTimeout(3600 * 1000); // 1 heure
 		this.client = new ClientServer();
 	}
 
