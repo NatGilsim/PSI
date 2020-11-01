@@ -148,6 +148,11 @@ public class Client {
 								descriptif = scn.next();
 								System.out.println("Prix ?");
 								prix = scn.next();
+								while (!prix.matches("^[0-9]+\\.[0-9]{0,2}")) {
+									System.out.println("Saisissez un prix valide.");
+									System.out.println("Prix ?");
+									prix = scn.next();
+								}
 								pw.println("POST_ANC");
 								pw.println(domain);
 								pw.println(title);
@@ -225,6 +230,7 @@ public class Client {
 	}
 
 	protected void processInput(String input) {
+		System.out.println("Requête reçue : <" + input + ">");
 		String[] parsed = input.split("\n");
 		switch(parsed[0]) {
 		case "CONNECT_OK":
@@ -246,13 +252,13 @@ public class Client {
 		case "POST_ANC_KO":
 			System.out.println("[Client] Annonce non créée.");
 			break;
-		case "SEND_DOMAINE_OK":
+		case "SEND_DOMAIN_OK":
 			System.out.println("[Client] Liste des domaines :");
 			for (int i = 1; i < parsed.length - 1; i++)
 				System.out.println(parsed[i]);
 			break;
 		case "SEND_DOMAIN_KO":
-			System.out.println("[Client] Echec reception liste des domaines.");
+			System.out.println("[Client] Aucun domaines à affiché.");
 			break;
 		case "SEND_ANC_OK":
 			System.out.println("[Client] Liste des annonces du domaine " + parsed[2] + ":");
@@ -260,7 +266,7 @@ public class Client {
 				System.out.println(parsed[i]);
 			break;
 		case "SEND_ANC_KO":
-			System.out.println("[Client] Aucune annonces à énumérées.");
+			System.out.println("[Client] Aucune annonces à affiché.");
 			break;
 		case "SEND_OWN_ANC_OK":
 			System.out.println("[Client] Liste de vos annonces :");

@@ -63,6 +63,7 @@ public class ClientHandler implements Runnable {
 	}
 	
 	protected void processInput(String input) throws IOException {
+		System.out.println("Requête reçue : <" + input + ">");
 		String[] parsed = input.split("\n");
 		switch(parsed[0]) {
 		case "CONNECT":
@@ -118,7 +119,7 @@ public class ClientHandler implements Runnable {
 		case "REQUEST_DOMAIN":
 			if (Domain.values().length >= 1) {
 				System.out.println("[Serveur] Envoie des domaines au client " + this.client.getName() + ".");
-				this.pw.println("SEND_DOMAINE_OK");
+				this.pw.println("SEND_DOMAIN_OK");
 				for (Domain d : Domain.values())
 					this.pw.println(d);
 				this.pw.println(".");
