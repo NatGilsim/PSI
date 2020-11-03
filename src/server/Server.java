@@ -77,7 +77,7 @@ public class Server {
 		int cnt = 0;
 		for (ClientServer cs : Server.clients) {
 			for (Annonce a : cs.getAnnonces()) {
-				if (a.getDomain().name().equals(domain)) {
+				if (a.getDomain().name().toLowerCase().equals(domain)) {
 					cnt++;
 				}
 			}
@@ -87,7 +87,7 @@ public class Server {
 
 	public static synchronized boolean domainExists(String domain) {
 		for (Domain d : Domain.values())
-			if (d.name().equals(domain))
+			if (d.name().toLowerCase().equals(domain))
 				return true;
 		return false;
 	}

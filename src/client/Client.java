@@ -18,7 +18,6 @@ public class Client {
 	private InputStream is = null;
 	private OutputStream os = null;
 	private PrintWriter pw = null;
-	private boolean isConnected = false;
 	private boolean quit = false;
 	private int port = -1;
 	private String name = null;
@@ -43,24 +42,27 @@ public class Client {
 			String cmd = "", input = "";
 				if (s != null) {
 					BufferedReader buffReader = new BufferedReader(new InputStreamReader(is));
-					while (isConnected) {
+					while (!s.isClosed()) {
 						cmd = "";
 						try {
 							do {
 								input = buffReader.readLine();
 								if (input != null) {
+									// connection is brutaly interrupted from the server
 									cmd += input + "\n";
 								} else {
 									closeConnexion();
-									System.out.println("[Client] Serveur shutdown.");
-									token = null;
+									System.out.println("[Client] Connexion interrompue avec le serveur.");
+									token = null; // token must be reinitialize since server has lost all tokens
 									printMenuAndInfos();
 									break;
 								}
-							} while (input != null && !input.equals(".") && !s.isClosed());
+							} while (!input.equals("."));
 						} catch (IOException e) {
-							if (isConnected)
+							// socket is close but it should not
+							if (!quit)
 								e.printStackTrace();
+							
 						}
 						if (!cmd.equals(""))
 							processInput(cmd);
@@ -75,73 +77,16 @@ public class Client {
 				scn.useDelimiter("\n");
 				String domain, title, descriptif, prix, id;
 				String newDomain, newTitle, newDescriptif, newPrix;
-				while (!quit) {
 					do {
 						int numCmd = scn.nextInt();
-						if (numCmd == 3 && (s == null || s.isClosed())) {
-							quit = true;
-						} else if (numCmd != 1 && (s == null || s.isClosed())) {
-							System.out.println("[Client] Socket non établie.");
-							printMenuAndInfos();
-						} else {
+						//s.setSoTimeout(3600 * 1000); // reset timeout
 							switch(numCmd) {
 							case 1:
-								if (!isConnected) {
-									try {
-										openConnexion();
-									} catch (UnknownHostException e) {
-										System.out.println("[Client] Le serveur n'est pas opérationnel.");
-										printMenuAndInfos();
-									} catch (IOException e) {
-										System.out.println("[Client] Le serveur n'est pas opérationnel.");
-										printMenuAndInfos();
-									}
-									inputCmd = new Thread(inCmd);
-									inputCmd.start();
-									if (!isConnected) {
-										break;
-									}
-									if (token == null) {
-										pw.println("CONNECT");
-										pw.println(name);
-										pw.println(".");
-									} else {
-										pw.println("CONNECT");
-										pw.println(token);
-										pw.println(".");
-									}
-								} else {
-									System.out.println("[Client] Vous êtes déjà connecté au serveur.");
-								}
-								break;
-							case 2:
 								pw.println("DISCONNECT");
 								pw.println(".");
-								try {
-									closeConnexion();
-								} catch (IOException e) {
-									e.printStackTrace();
-								}
-								System.out.println("[Client] Vous êtes déconnecté du serveur.");
-								printMenuAndInfos();
-								break;
-							case 3:
-								if (isConnected) {
-									try {
-										closeConnexion();
-									} catch (IOException e) {
-										e.printStackTrace();
-									}
-								}
-								System.out.println("[Client] Vous êtes déconnecté du serveur.");
-								System.out.println("\nUtilisateur : " + name);
-								if (s == null)
-									System.out.println("Socket établie : false");
-								else
-									System.out.println("Socket établie : " + !s.isClosed());
 								quit = true;
 								break;
-							case 4:
+							case 2:
 								System.out.println("Domaine ?");
 								domain = scn.next();
 								System.out.println("Titre ?");
@@ -150,6 +95,7 @@ public class Client {
 								descriptif = scn.next();
 								System.out.println("Prix ?");
 								prix = scn.next();
+								// regex to make sure that prix is indeed a price
 								while (!prix.matches("^[0-9]+\\.?[0-9]{0,2}")) {
 									System.out.println("Saisissez un prix valide.");
 									System.out.println("Prix ?");
@@ -162,18 +108,18 @@ public class Client {
 								pw.println(prix);
 								pw.println(".");
 								break;
-							case 5:
+							case 3:
 								pw.println("REQUEST_DOMAIN");
 								pw.println(".");
 								break;
-							case 6:
+							case 4:
 								System.out.println("Domaine ?");
 								domain = scn.next();
 								pw.println("REQUEST_ANC");
-								pw.println(domain);
+								pw.println(domain.toLowerCase());
 								pw.println(".");
 								break;
-							case 7:
+							case 5:
 								System.out.println("[Client] Quelle est l'id de l'annonce à modifier ?");
 								id = scn.next();
 								System.out.println("Domaine ?");
@@ -189,7 +135,7 @@ public class Client {
 								if (newDomain.equals(""))
 									pw.println("null");
 								else
-									pw.println(newDomain);
+									pw.println(newDomain.toLowerCase());
 								if (newTitle.equals(""))
 									pw.println("null");
 								else
@@ -204,11 +150,11 @@ public class Client {
 									pw.println(newPrix);
 								pw.println(".");
 								break;
-							case 8:
+							case 6:
 								pw.println("REQUEST_OWN_ANC");
 								pw.println(".");
 								break;
-							case 9:
+							case 7:
 								System.out.println("[Client] Quelle est l'id de l'annonce à supprimer ?");
 								id = scn.next();
 								pw.println("DELETE_ANC");
@@ -219,16 +165,43 @@ public class Client {
 								System.out.println("[Client] Commande inconnue.");
 								break;
 							}
-						}
-					} while (isConnected);
+					} while (!quit);
+				try {
+					closeConnexion();
+					System.out.println("[Client] Vous êtes déconnecté du serveur.");
+				} catch (IOException e) {
+					e.printStackTrace();
 				}
 			}
 		});
+		try {
+			openConnexion();
+		} catch (UnknownHostException e) {
+			System.out.println("[Client] Le serveur n'est pas opérationnel.");
+			return;
+		} catch (IOException e) {
+			System.out.println("[Client] Le serveur n'est pas opérationnel.");
+			return;
+		}
 		System.out.println("[Client] Nom d'utilisateur ?");
 		this.name = scn.next();
+		if (this.name.substring(0, 1).equals("#")) {
+			this.token = name;
+		}
+		if (token == null) {
+			pw.println("CONNECT");
+			pw.println(name);
+			pw.println(".");
+		} else {
+			pw.println("CONNECT");
+			pw.println(token);
+			pw.println(".");
+		}
+		inputCmd = new Thread(inCmd);
+		inputCmd.start();
 		outputCmd = outCmd;
 		outputCmd.start();
-		this.printMenuAndInfos();
+		//this.printMenuAndInfos();
 	}
 
 	protected void processInput(String input) {
@@ -236,7 +209,7 @@ public class Client {
 		String[] parsed = input.split("\n");
 		switch(parsed[0]) {
 		case "CONNECT_OK":
-			System.out.println("[Client] Vous êtes connecté au serveur.");
+			System.out.println("[Client] Vous êtes connecté au serveur avec votre précédent token.");
 			break;
 		case "CONNECT_NEW_USER_OK":
 			this.token = parsed[1];
@@ -263,7 +236,7 @@ public class Client {
 			System.out.println("[Client] Aucun domaines à affiché.");
 			break;
 		case "SEND_ANC_OK":
-			System.out.println("[Client] Liste des annonces du domaine " + parsed[2] + ":");
+			System.out.println("[Client] Liste des annonces du domaine demandé :");
 			for (int i = 1; i < parsed.length - 1; i++)
 				System.out.println(parsed[i]);
 			break;
@@ -288,7 +261,7 @@ public class Client {
 			System.out.println("[Client] L'annonce avec l'id " + Integer.parseInt(parsed[1]) + " a été supprimé.");
 			break;
 		case "DELETE_ANC_KO":
-			System.out.println("[Client] L'annonce avec l'id " + Integer.parseInt(parsed[1] + " n'a pas été supprimée."));
+			System.out.println("[Client] L'annonce n'a pas été supprimée.");
 			break;
 		case "UNKNOWN_REQUEST":
 			System.out.println("[Client] La requête envoyée n'est pas reconnue par le serveur.");
@@ -305,20 +278,13 @@ public class Client {
 
 	private void printMenuAndInfos() {
 		System.out.println("\nUtilisateur : " + this.name);
-		if (this.s == null)
-			System.out.println("Socket établie : false");
-		else
-			System.out.println("Socket établie : " + !this.s.isClosed());
-		System.out.println("Connecté au serveur : " + this.isConnected);
-		System.out.println("1 : Connexion au serveur.");
-		System.out.println("2 : Deconnexion du serveur.");
-		System.out.println("3 : Quitter l'application.");
-		System.out.println("4 : Poster une annonce.");
-		System.out.println("5 : Liste des domaines disponibles.");
-		System.out.println("6 : Recevoir les annonces d'un domaine.");
-		System.out.println("7 : MAJ annonce.");
-		System.out.println("8 : Mes annonces.");
-		System.out.println("9 : Supprimer annonce.");
+		System.out.println("1 : Quitter l'application.");
+		System.out.println("2 : Poster une annonce.");
+		System.out.println("3 : Liste des domaines disponibles.");
+		System.out.println("4 : Recevoir les annonces d'un domaine.");
+		System.out.println("5 : MAJ annonce.");
+		System.out.println("6 : Mes annonces.");
+		System.out.println("7 : Supprimer annonce.");
 		System.out.println("Que voulez-vous faire ?");
 	}
 
@@ -330,7 +296,6 @@ public class Client {
 		this.pw.close();
 		this.is.close();
 		this.os.close();
-		this.isConnected = false;
 	}
 
 	private void openConnexion() throws UnknownHostException, IOException {
@@ -338,7 +303,6 @@ public class Client {
 		this.is = this.s.getInputStream();
 		this.os = this.s.getOutputStream();
 		this.pw = new PrintWriter(this.os, true);
-		this.isConnected = true;
 	}
 
 	public static void main(String[] args ) throws IOException {

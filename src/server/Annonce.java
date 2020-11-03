@@ -2,11 +2,11 @@ package server;
 
 public class Annonce {
 
+	private int id;
 	private Domain dom;
 	private String titre;
 	private String descriptif;
 	private float prix;
-	private int id;
 
 	public Annonce (Domain d, String titre, String descriptif, float prix, int id) {
 		this.id = id;
