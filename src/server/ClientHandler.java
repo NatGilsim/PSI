@@ -195,6 +195,7 @@ public class ClientHandler implements Runnable {
 						this.client.getAnnonceById(Integer.parseInt(parsed[1])).setPrix(Integer.parseInt(parsed[5]));
 					System.out.println("[Serveur] Le client " + this.client.getName() + " a mis à jour l'annonce avec l'id " + Integer.parseInt(parsed[1]) + ".");
 					this.pw.println("MAJ_ANC_OK");
+					this.pw.println(parsed[1]);
 					this.pw.println(".");
 				} else {
 					System.out.println("[Serveur] Le client " + this.client.getName() + " veut mettre à jour une annonce qui ne lui appartient pas");

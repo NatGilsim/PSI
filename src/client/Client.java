@@ -255,7 +255,7 @@ public class Client {
 			System.out.println("[Client] Annonce non mise à jour.");
 			break;
 		case "MAJ_ANC_OK":
-			System.out.println("[Client] Annonce mise à jour avec succès.");
+			System.out.println("[Client] Annonce avec l'id " + parsed[1] + " mise à jour avec succès.");
 			break;
 		case "DELETE_ANC_OK":
 			System.out.println("[Client] L'annonce avec l'id " + Integer.parseInt(parsed[1]) + " a été supprimé.");
