@@ -205,7 +205,7 @@ public class Client {
 	}
 
 	protected void processInput(String input) {
-		System.out.println("Requête reçue : <" + input + ">");
+		//System.out.println("Requête reçue : <" + input + ">");
 		String[] parsed = input.split("\n");
 		switch(parsed[0]) {
 		case "CONNECT_OK":

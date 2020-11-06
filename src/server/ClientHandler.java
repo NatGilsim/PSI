@@ -111,17 +111,23 @@ public class ClientHandler implements Runnable {
 				break;
 			case "POST_ANC":
 				float prixAnnonce = Float.valueOf(parsed[4]);
-				int idAnnonce = Server.createIdAnnonce();
-				System.out.println(Domain.valueOf(parsed[1]));
-				if (this.addAnnonce(Domain.valueOf(parsed[1]), parsed[2], parsed[3], prixAnnonce, idAnnonce)) {
-					System.out.println("[Serveur] Client " + this.client.getName() + " a créé l'annonce avec l'id " + idAnnonce + ".");
-					this.pw.println("POST_ANC_OK");
-					this.pw.println(idAnnonce);
-					this.pw.println(".");
-				} else {
+				if (!Server.domainExists(parsed[1].toLowerCase())) {
 					System.out.println("[Serveur] Echec de création d'annonce par le client " + this.client.getName() + ".");
 					this.pw.println("POST_ANC_KO");
 					this.pw.println(".");
+				} else {
+					int idAnnonce = Server.createIdAnnonce();
+					//System.out.println(Domain.valueOf(parsed[1]));
+					if (this.addAnnonce(Domain.valueOf(parsed[1]), parsed[2], parsed[3], prixAnnonce, idAnnonce)) {
+						System.out.println("[Serveur] Client " + this.client.getName() + " a créé l'annonce avec l'id " + idAnnonce + ".");
+						this.pw.println("POST_ANC_OK");
+						this.pw.println(idAnnonce);
+						this.pw.println(".");
+					} else {
+						System.out.println("[Serveur] Echec de création d'annonce par le client " + this.client.getName() + ".");
+						this.pw.println("POST_ANC_KO");
+						this.pw.println(".");
+					}
 				}
 				break;
 			case "REQUEST_DOMAIN":
