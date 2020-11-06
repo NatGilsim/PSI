@@ -62,7 +62,7 @@ public class Client {
 							// socket is close but it should not
 							if (!quit)
 								e.printStackTrace();
-							
+
 						}
 						if (!cmd.equals(""))
 							processInput(cmd);
@@ -249,7 +249,7 @@ public class Client {
 				System.out.println(parsed[i]);
 			break;
 		case "SEND_OWN_ANC_KO":
-			System.out.println("[Client] Aucunes de vos annonces à énumérées.");
+			System.out.println("[Client] Aucune annonce à énumérer.");
 			break;
 		case "MAJ_ANC_KO":
 			System.out.println("[Client] Annonce non mise à jour.");
