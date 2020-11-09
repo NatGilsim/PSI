@@ -19,7 +19,7 @@ public class Client {
 	private OutputStream os = null;
 	private PrintWriter pw = null;
 	private boolean quit = false;
-	private int port = -1;
+	private int port = -2;
 	private String name = null;
 	private String token = null;
 	private Thread outputCmd; // thread use to send cmd to server ask by the user (always running)
