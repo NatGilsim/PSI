@@ -2,46 +2,49 @@ package client;
 
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.PrintWriter;
+import java.net.DatagramPacket;
+import java.net.DatagramSocket;
+import java.net.InetAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
-import java.util.Scanner;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Timer;
+import java.util.TimerTask;
 
-import server.Domain;
-
-public class Client {
+public class Client implements ClientToServerTcpProtocol, ServerTcpToClientProtocol {
 
 	private Socket s = null;
-	private InputStream is = null;
 	private OutputStream os = null;
-	private PrintWriter pw = null;
+	private PrintWriter writer = null;
 	private boolean quit = false;
 	private int port = -2;
 	private String name = null;
 	private String token = null;
-	private Thread outputCmd; // thread use to send cmd to server ask by the user (always running)
 	private Thread inputCmd; // thread use to process cmd receive from server (run only when client is connected to server)
-	//private Thread sendMessage;
-	//private Thread receiveMessage;
+	private ClientGui gui;
+	private ServerUPD serverUDP;
+	private Map<String, MessageUDP> acknowledgementMsg = new HashMap<String, MessageUDP>();
 
-	public Client(int port, String name) throws UnknownHostException, IOException {
+	public Client(int port) throws UnknownHostException, IOException {
 		this.port = port;
-		this.name = name;
 		this.quit = false;
-		this.begin();
-	}
-
-	private void begin() {
-		Scanner scn = new Scanner(System.in);
 		Thread inCmd = new Thread(new Runnable() {
 			@Override
 			public void run() {
 			String cmd = "", input = "";
+			BufferedReader buffReader = null;
 				if (s != null) {
-					BufferedReader buffReader = new BufferedReader(new InputStreamReader(is));
+					try {
+						buffReader = new BufferedReader(new InputStreamReader(s.getInputStream()));
+					} catch (IOException e1) {
+						e1.printStackTrace();
+					}
 					while (!s.isClosed()) {
 						cmd = "";
 						try {
@@ -52,240 +55,97 @@ public class Client {
 									cmd += input + "\n";
 								} else {
 									closeConnexion();
-									System.out.println("[Client] Connexion interrompue avec le serveur.");
+									printConsole("Connexion with server shutdown.");
 									token = null; // token must be reinitialize since server has lost all tokens
-									printMenuAndInfos();
 									break;
 								}
 							} while (!input.equals("."));
 						} catch (IOException e) {
-							// socket is close but it should not
 							if (!quit)
+								 // socket is close but it should not
 								e.printStackTrace();
 
 						}
 						if (!cmd.equals(""))
-							processInput(cmd);
+							try {
+								processInput(cmd);
+							} catch (IOException e) {
+								e.printStackTrace();
+							}
 					}
 				}
 			}
 		});
-		Thread outCmd = new Thread(new Runnable() {
-			Scanner scn = new Scanner(System.in);
-			@Override
-			public void run() {
-				scn.useDelimiter("\n");
-				String domain, title, descriptif, prix, id;
-				String newDomain, newTitle, newDescriptif, newPrix;
-					do {
-						int numCmd = scn.nextInt();
-						//s.setSoTimeout(3600 * 1000); // reset timeout
-							switch(numCmd) {
-							case 1:
-								pw.println("DISCONNECT");
-								pw.println(".");
-								quit = true;
-								break;
-							case 2:
-								System.out.println("Domaine ?");
-								domain = scn.next();
-								System.out.println("Titre ?");
-								title = scn.next();
-								System.out.println("Descriptif ?");
-								descriptif = scn.next();
-								System.out.println("Prix ?");
-								prix = scn.next();
-								// regex to make sure that prix is indeed a price
-								while (!prix.matches("^[0-9]+\\.?[0-9]{0,2}")) {
-									System.out.println("Saisissez un prix valide.");
-									System.out.println("Prix ?");
-									prix = scn.next();
-								}
-								pw.println("POST_ANC");
-								pw.println(domain.toLowerCase());
-								pw.println(title);
-								pw.println(descriptif);
-								pw.println(prix);
-								pw.println(".");
-								break;
-							case 3:
-								pw.println("REQUEST_DOMAIN");
-								pw.println(".");
-								break;
-							case 4:
-								System.out.println("Domaine ?");
-								domain = scn.next();
-								pw.println("REQUEST_ANC");
-								pw.println(domain.toLowerCase());
-								pw.println(".");
-								break;
-							case 5:
-								System.out.println("[Client] Quelle est l'id de l'annonce à modifier ?");
-								id = scn.next();
-								System.out.println("Domaine ?");
-								newDomain = scn.next();
-								System.out.println("Titre ?");
-								newTitle = scn.next();
-								System.out.println("Descriptif ?");
-								newDescriptif = scn.next();
-								System.out.println("Prix ?");
-								newPrix = scn.next();
-								pw.println("MAJ_ANC");
-								pw.println(id);
-								if (newDomain.equals(""))
-									pw.println("null");
-								else
-									pw.println(newDomain.toLowerCase());
-								if (newTitle.equals(""))
-									pw.println("null");
-								else
-									pw.println(newTitle);
-								if (newDescriptif.equals(""))
-									pw.println("null");
-								else
-									pw.println(newDescriptif);
-								if (newPrix.equals(""))
-									pw.println("null");
-								else
-									pw.println(newPrix);
-								pw.println(".");
-								break;
-							case 6:
-								pw.println("REQUEST_OWN_ANC");
-								pw.println(".");
-								break;
-							case 7:
-								System.out.println("[Client] Quelle est l'id de l'annonce à supprimer ?");
-								id = scn.next();
-								pw.println("DELETE_ANC");
-								pw.println(id);
-								pw.println(".");
-								break;
-							default:
-								System.out.println("[Client] Commande inconnue.");
-								break;
-							}
-					} while (!quit);
-				try {
-					closeConnexion();
-					System.out.println("[Client] Vous êtes déconnecté du serveur.");
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			}
-		});
-		try {
-			openConnexion();
-		} catch (UnknownHostException e) {
-			System.out.println("[Client] Le serveur n'est pas opérationnel.");
-			return;
-		} catch (IOException e) {
-			System.out.println("[Client] Le serveur n'est pas opérationnel.");
-			return;
-		}
-		System.out.println("[Client] Nom d'utilisateur ?");
-		this.name = scn.next();
-		if (this.name.substring(0, 1).equals("#")) {
-			this.token = name;
-		}
-		if (token == null) {
-			pw.println("CONNECT");
-			pw.println(name);
-			pw.println(".");
-		} else {
-			pw.println("CONNECT");
-			pw.println(token);
-			pw.println(".");
-		}
-		inputCmd = new Thread(inCmd);
-		inputCmd.start();
-		outputCmd = outCmd;
-		outputCmd.start();
-		//this.printMenuAndInfos();
+		inputCmd = inCmd;
+	    this.gui = new ClientGui(this);
+	    this.gui.setVisible(true);
 	}
 
-	protected void processInput(String input) {
-		//System.out.println("Requête reçue : <" + input + ">");
+	protected void processInput(String input) throws UnknownHostException, IOException {
 		String[] parsed = input.split("\n");
 		switch(parsed[0]) {
 		case "CONNECT_OK":
-			System.out.println("[Client] Vous êtes connecté au serveur avec votre précédent token.");
+            this.connectOk();
 			break;
 		case "CONNECT_NEW_USER_OK":
-			this.token = parsed[1];
-			System.out.println("[Client] Vous êtes connecté au serveur : votre token est " + this.token + ".");
+            this.connectNewUserOk(parsed[1]);
 			break;
 		case "CONNECT_NEW_USER_KO":
-			System.out.println("[Client] Le nom d'utilisateur ne doit pas commencer par dièse ou est déjà utilisé.");
+			this.connectNewUserKo();
 			break;
 		case "CONNECT_KO":
-			System.out.println("[Client] Erreur de connexion.");
+			this.connectKo();
 			break;
 		case "POST_ANC_OK":
-			System.out.println("[Client] Annonce créée avec succès.");
+			this.postAncOk();
 			break;
 		case "POST_ANC_KO":
-			System.out.println("[Client] Annonce non créée.");
+			this.postAncKo();
 			break;
 		case "SEND_DOMAIN_OK":
-			System.out.println("[Client] Liste des domaines :");
-			for (int i = 1; i < parsed.length - 1; i++)
-				System.out.println(parsed[i]);
+			this.sendDomainOk(Arrays.copyOfRange(parsed, 1, parsed.length - 1));
 			break;
 		case "SEND_DOMAIN_KO":
-			System.out.println("[Client] Aucun domaines à affiché.");
+			this.sendDomainKo();
 			break;
 		case "SEND_ANC_OK":
-			System.out.println("[Client] Liste des annonces du domaine demandé :");
-			for (int i = 1; i < parsed.length - 1; i++)
-				System.out.println(parsed[i]);
+			this.sendAncOk(Arrays.copyOfRange(parsed, 1, parsed.length - 1));
 			break;
 		case "SEND_ANC_KO":
-			System.out.println("[Client] Aucune annonces à affiché.");
+			this.sendAncKo();
 			break;
 		case "SEND_OWN_ANC_OK":
-			System.out.println("[Client] Liste de vos annonces :");
-			for (int i = 1; i < parsed.length - 1; i++)
-				System.out.println(parsed[i]);
+			this.sendOwnAncOk(Arrays.copyOfRange(parsed, 1, parsed.length - 1));
 			break;
 		case "SEND_OWN_ANC_KO":
-			System.out.println("[Client] Aucune annonce à énumérer.");
-			break;
-		case "MAJ_ANC_KO":
-			System.out.println("[Client] Annonce non mise à jour.");
+			this.sendOwnAncKo();
 			break;
 		case "MAJ_ANC_OK":
-			System.out.println("[Client] Annonce avec l'id " + parsed[1] + " mise à jour avec succès.");
+			this.majAncOk(parsed[1]);
+			break;
+		case "MAJ_ANC_KO":
+			this.majAncKo();
 			break;
 		case "DELETE_ANC_OK":
-			System.out.println("[Client] L'annonce avec l'id " + Integer.parseInt(parsed[1]) + " a été supprimé.");
+			this.delAncOk(parsed[1]);
 			break;
 		case "DELETE_ANC_KO":
-			System.out.println("[Client] L'annonce n'a pas été supprimée.");
+			this.delAncKo();
 			break;
+        case "REQUEST_IP_OK":
+        	this.requestIpOk(parsed[1], parsed[2]);
+            break;
 		case "UNKNOWN_REQUEST":
-			System.out.println("[Client] La requête envoyée n'est pas reconnue par le serveur.");
+			this.unknownRequest();
 			break;
 		case "NOT_CONNECTED":
-			System.out.println("[Client] Vous n'êtes pas connecté au serveur.");
+			this.notConnedted();
 			break;
 		default:
-			System.out.println("[Client] Requête inconnue : " + parsed[0]);
+			this.printConsole("Unknown command: <" + parsed[0] + ">.");
 			break;
 		}
-		this.printMenuAndInfos();
-	}
-
-	private void printMenuAndInfos() {
-		System.out.println("\nUtilisateur : " + this.name);
-		System.out.println("1 : Quitter l'application.");
-		System.out.println("2 : Poster une annonce.");
-		System.out.println("3 : Liste des domaines disponibles.");
-		System.out.println("4 : Recevoir les annonces d'un domaine.");
-		System.out.println("5 : MAJ annonce.");
-		System.out.println("6 : Mes annonces.");
-		System.out.println("7 : Supprimer annonce.");
-		System.out.println("Que voulez-vous faire ?");
+        this.gui.updateIsConnected();
 	}
 
 	private void closeConnexion() throws IOException {
@@ -293,20 +153,274 @@ public class Client {
 			this.inputCmd.interrupt();
 		}
 		this.s.close();
-		this.pw.close();
-		this.is.close();
+		this.writer.close();
 		this.os.close();
 	}
 
 	private void openConnexion() throws UnknownHostException, IOException {
-		this.s = new Socket("127.0.0.1", port);
-		this.is = this.s.getInputStream();
+		this.s = new Socket(this.gui.getIPServeur(), port);
+		//this.is = this.s.getInputStream();
 		this.os = this.s.getOutputStream();
-		this.pw = new PrintWriter(this.os, true);
+		this.writer = new PrintWriter(this.os, true);
+	}
+        
+    public boolean isConnected() {
+        if (this.s == null || this.s.isClosed()) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+    
+    /* Client to Server TCP protocol */
+    
+    @Override
+	public void connect(String name) {
+		this.name = name;
+		try {
+			openConnexion();
+		} catch (UnknownHostException e) {
+			this.printConsole("Server is off.");
+			return;
+		} catch (IOException e) {
+			this.printConsole("Server is off.");
+			return;
+		}
+		if (this.name.substring(0, 1).equals("#")) {
+			this.token = name;
+		}
+		if (token == null) {
+			this.writer.println("CONNECT");
+			this.writer.println(name);
+			this.writer.println(".");
+		} else {
+			this.writer.println("CONNECT");
+			this.writer.println(token);
+			this.writer.println(".");
+		}
+		inputCmd.start();
+	}
+    
+    @Override
+    public void disconnect() {
+    	this.writer.println("DISCONNECT");
+    	this.writer.println(".");
+        this.quit = true;
+    }
+
+	@Override
+	public void requestDomain() {
+		this.printConsole("Demande des domaines disponible.");
+		this.writer.println("REQUEST_DOMAIN");
+		this.writer.println(".");
+	}
+	
+	@Override
+	public void requestAnnonce(String domain) {
+		this.writer.println("REQUEST_ANC");
+		this.writer.println(domain);
+		this.writer.println(".");
+	}
+	
+	@Override
+    public void requestOwnAnnonce() {
+    	this.writer.println("REQUEST_OWN_ANC");
+    	this.writer.println(".");
+	}
+	
+    @Override
+    public void postAnc(String domain, String title, String descriptif, String price) {
+    	this.writer.println("POST_ANC");
+    	this.writer.println(domain);
+    	this.writer.println(title);
+    	this.writer.println(descriptif);
+    	this.writer.println(price);
+    	this.writer.println(".");
+    }
+
+    @Override
+    public void majAnc(String id, String domain, String title, String descriptif, String price) {
+    	this.writer.println("MAJ_ANC");
+    	this.writer.println(id);
+    	this.writer.println(domain);
+    	this.writer.println(title);
+    	this.writer.println(descriptif);
+    	this.writer.println(price);
+    	this.writer.println(".");
+    }
+
+    @Override
+    public void delAnc(String id) {
+        this.writer.println("DELETE_ANC");
+        this.writer.println(id);
+        this.writer.println(".");
+    }
+
+    @Override
+    public void requestIP(String id) {
+        this.writer.println("REQUEST_IP");
+        this.writer.println(id);
+        this.writer.println(".");
+    }
+    
+    /* Server to Client protocol */
+    
+    @Override
+	public void connectOk() {
+    	this.gui.printConsole("You are connected with your token with user name " + this.name + ".");
+        this.gui.basePerspective();
+        try {
+			this.serverUDP = new ServerUPD(this);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+        this.serverUDP.start();
 	}
 
-	public static void main(String[] args ) throws IOException {
-		Client c = new Client(1027, "toto");
+	@Override
+	public void connectNewUserOk(String token) {
+		this.token = token;
+		this.gui.printConsole("You are connected as " + this.name + " and you're token is " + token + ".");
+        this.gui.basePerspective();
+        try {
+			this.serverUDP = new ServerUPD(this);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+        this.serverUDP.start();
 	}
 
+	@Override
+	public void connectNewUserKo() {
+		this.printConsole("The user name chosen shouldn't start by diese or is already used.");
+	}
+
+	@Override
+	public void connectKo() {
+		this.printConsole("Connexion to server error.");
+	}
+
+	@Override
+	public void postAncOk() {
+		this.printConsole("Annonce succesfully created.");
+	}
+
+	@Override
+	public void postAncKo() {
+		this.printConsole("Annonce not created.");
+	}
+
+	@Override
+	public void sendDomainOk(String[] domains) {
+		this.printConsole("Domain list succesfully received.");
+        this.gui.updateDomains(domains);
+	}
+
+	@Override
+	public void sendDomainKo() {
+		this.printConsole("No domain to print.");
+	}
+
+	@Override
+	public void sendAncOk(String[] annonces) {
+		this.printConsole("Annonces list succesfully received.");
+		this.gui.updateAnnoncesList(annonces);
+	}
+
+	@Override
+	public void sendAncKo() {
+		this.printConsole("Annonce list is empty.");
+		this.gui.updateAnnoncesList(null);
+	}
+
+	@Override
+	public void sendOwnAncOk(String[] annonces) {
+		this.printConsole("Own annonces received.");
+		this.gui.updateAnnoncesList(annonces);
+        this.gui.allowUpdateOwnAnnonce();
+		
+	}
+
+	@Override
+	public void sendOwnAncKo() {
+		this.printConsole("Own annonce list is empty.");
+	}
+
+	@Override
+	public void majAncOk(String idAnnonce) {
+		this.printConsole("Annonce with id <" + idAnnonce + "> is updated.");
+		
+	}
+
+	@Override
+	public void majAncKo() {
+		this.printConsole("Annonce is not updated.");
+	}
+
+	@Override
+	public void delAncOk(String idAnnonce) {
+		this.printConsole("Annonce with id " + idAnnonce + " is removed.");
+	}
+
+	@Override
+	public void delAncKo() {
+		this.printConsole("Annonce not removed.");
+	}
+
+	@Override
+	public void requestIpOk(String ip, String destinataire) {
+		this.printConsole("User " + destinataire + " has ip address " + ip + ".");
+    	try {
+			this.serverUDP.addPeer(destinataire, InetAddress.getByName(ip));
+		} catch (UnknownHostException e) {
+			e.printStackTrace();
+		}
+    	this.addChat(destinataire);
+	}
+
+	@Override
+	public void unknownRequest() {
+		this.printConsole("Method send to the server is unknown.");
+	}
+
+	@Override
+	public void notConnedted() {
+		this.printConsole("You are not connected to the server.");
+	}
+    
+    public void sendCustomCommand(String cmd) throws UnknownHostException, IOException {
+    	this.processInput(cmd);
+    }
+    
+    public String getName() {
+    	return this.name;
+    }
+    
+    public void addChat(String destinataire) {
+    	if (!this.gui.existsConv(destinataire))
+			this.gui.addConv(destinataire);
+    }
+    
+    public void sendMessage(String to, String msg) throws IOException {
+    	this.gui.writeTabbedPane(to, " [To] " + msg);
+    	this.serverUDP.sendMessage(to, msg);
+    }
+
+    public void printConsole(String msg) {
+    	this.gui.printConsole(msg);
+    }
+    
+    public Map<String, MessageUDP> getAcknowledgementMap() {
+    	return this.acknowledgementMsg;
+    }
+
+    public static void main(String[] args ) throws IOException {
+		Client c = new Client(1027);
+	}
+    
+	public void receiveMsg(String emetteur, String msg) {
+		if (!this.gui.existsConv(emetteur))
+			this.gui.addConv(emetteur);
+		this.gui.writeTabbedPane(emetteur, msg);
+	}
 }

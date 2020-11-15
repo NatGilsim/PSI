@@ -6,12 +6,14 @@ public class ClientServer {
 
 	private String name = null;
 	private String token = null;
+	private String ip;
 	private ArrayList<Annonce> annonces = new ArrayList<Annonce>();
 	private boolean isConnected = false;
 
-	public ClientServer(String name, String token) {
+	public ClientServer(String name, String token, String ip) {
 		this.name = name;
 		this.token = token;
+		this.ip = ip;
 	}
 
 	public ClientServer() {}
@@ -52,6 +54,10 @@ public class ClientServer {
 
 	public boolean getIsConnected() {
 		return this.isConnected;
+	}
+	
+	public String getIP() {
+		return this.ip;
 	}
 
 }

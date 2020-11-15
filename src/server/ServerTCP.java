@@ -6,7 +6,7 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-public class Server {
+public class ServerTCP {
 	
 	private ServerSocket ss = null;
 	private boolean isRunning = true;
@@ -15,7 +15,7 @@ public class Server {
 	static public int idClient = 0;
 	static public int idAnnonce = 0;
 
-	public Server(int port) throws IOException {
+	public ServerTCP(int port) throws IOException {
 		this.ss = new ServerSocket(1027);
 		this.begin();
 	}
@@ -27,55 +27,55 @@ public class Server {
 			System.out.println("[Serveur] Nouvelle requête client : " + s);
 			ClientHandler ch = new ClientHandler(s);
 			Thread t = new Thread(ch);
-			Server.addHandler(ch);
+			ServerTCP.addHandler(ch);
 			t.start();
 		}
 	}
 	
 	public static synchronized boolean addHandler(ClientHandler ch) {
 		System.out.println("[Serveur] Nouvelle connexion géré par le serveur.");
-		return Server.handlers.add(ch);
+		return ServerTCP.handlers.add(ch);
 	}
 
 	public static synchronized boolean delHandler(ClientHandler ch) {
 		System.out.println("[Serveur] Une connexion a été arrêtée.");
-		return Server.handlers.remove(ch);
+		return ServerTCP.handlers.remove(ch);
 	}
 
 	public static synchronized boolean tokenExists(String newToken) {
-		for (ClientServer cs : Server.clients)
+		for (ClientServer cs : ServerTCP.clients)
 			if (newToken.equals(cs.getToken()))
 				return true;
 		return false;
 	}
 	
 	public static synchronized boolean userExists(String newUser) {
-		for (ClientServer cs : Server.clients)
+		for (ClientServer cs : ServerTCP.clients)
 			if (cs.getName().equals(newUser))
 				return true;
 		return false;
 	}
 	
 	public static synchronized ClientServer getClientFromToken(String token) {
-		for (ClientServer cs : Server.clients)
+		for (ClientServer cs : ServerTCP.clients)
 			if (cs.getToken().equals(token))
 				return cs;
 		return null;
 	}
 	
 	public static synchronized void delAnnonce(int idAnnonce) {
-		for (ClientServer cs : Server.clients) {
+		for (ClientServer cs : ServerTCP.clients) {
 			for (Iterator<Annonce> iterator = cs.getAnnonces().iterator(); iterator.hasNext();) {
 				Annonce a = iterator.next();
 				if (a.getId() == idAnnonce)
-					iterator.remove();;
+					iterator.remove();
 			}
 		}
 	}
 
 	public static synchronized int nbrAnnonces(String domain) {
 		int cnt = 0;
-		for (ClientServer cs : Server.clients) {
+		for (ClientServer cs : ServerTCP.clients) {
 			for (Annonce a : cs.getAnnonces()) {
 				if (a.getDomain().name().toLowerCase().equals(domain)) {
 					cnt++;
@@ -93,14 +93,25 @@ public class Server {
 	}
 
 	public static synchronized String createToken() {
-		return "#" + (++Server.idClient);
+		return "#" + (++ServerTCP.idClient);
 	}
 	
 	public static synchronized int createIdAnnonce() {
-		return ++Server.idAnnonce;
+		return ++ServerTCP.idAnnonce;
+	}
+	
+	public static synchronized ClientServer getClientFromIdAnnonce(String idAnnonce) {
+		for (ClientServer cs : ServerTCP.clients) {
+			for (Annonce a : cs.getAnnonces()) {
+				if (a.getId() == Integer.parseInt(idAnnonce)) {
+					return cs;
+				}
+			}
+		}
+		return null;
 	}
 	
 	public static void main(String[] args) throws IOException {
-		Server s = new Server(1027);
+		ServerTCP s = new ServerTCP(1027);
 	}
 }

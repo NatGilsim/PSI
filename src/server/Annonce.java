@@ -6,7 +6,7 @@ public class Annonce {
 	private Domain dom;
 	private String titre;
 	private String descriptif;
-	private float prix;
+	private double prix;
 
 	public Annonce (Domain d, String titre, String descriptif, float prix, int id) {
 		this.id = id;
@@ -28,7 +28,7 @@ public class Annonce {
 		return this.descriptif;
 	}
 
-	public float getPrix() {
+	public double getPrix() {
 		return this.prix;
 	}
 
@@ -48,8 +48,8 @@ public class Annonce {
 		this.descriptif = descriptif;
 	}
 
-	public void setPrix(float prix) {
-		this.prix = prix;
+	public void setPrix(double d) {
+		this.prix = d;
 	}
 
 }
