@@ -4,5 +4,8 @@ public enum Domain {
 	Téléphone,
 	Voiture,
 	Maison,
-	Appartement
+	Appartement,
+	Meuble,
+	Vêtement,
+	Ordinateur
 }

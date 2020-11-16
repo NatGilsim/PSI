@@ -2,9 +2,9 @@ JC = javac
 
 all : Client.class Server.class
 
-Client.class : client/Client.java
+Client.class : client/*.java
 	$(JC) client/*.java
-Server.class : server/Annonce.java server/ClientHandler.java server/ClientServer.java server/Domain.java server/Server.java
+Server.class : server/*.java
 	$(JC) server/*.java
 clean :
 	rm server/*.class client/*.class

@@ -1,7 +1,7 @@
 package client;
 
 public interface ServerTcpToClientProtocol {
-	public void connectOk();
+	public void connectOk(String token, String utilisateur);
 	public void connectNewUserOk(String token);
 	public void connectNewUserKo();
 	public void connectKo();
@@ -18,6 +18,7 @@ public interface ServerTcpToClientProtocol {
 	public void delAncOk(String idAnnonce);
 	public void delAncKo();
 	public void requestIpOk(String ip, String destinataire);
+	public void requestIpKo();
 	public void unknownRequest();
 	public void notConnedted();
 }

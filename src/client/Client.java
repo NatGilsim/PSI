@@ -5,17 +5,12 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.PrintWriter;
-import java.net.DatagramPacket;
-import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Timer;
-import java.util.TimerTask;
 
 public class Client implements ClientToServerTcpProtocol, ServerTcpToClientProtocol {
 
@@ -85,7 +80,7 @@ public class Client implements ClientToServerTcpProtocol, ServerTcpToClientProto
 		String[] parsed = input.split("\n");
 		switch(parsed[0]) {
 		case "CONNECT_OK":
-            this.connectOk();
+            this.connectOk(parsed[1], parsed[2]);
 			break;
 		case "CONNECT_NEW_USER_OK":
             this.connectNewUserOk(parsed[1]);
@@ -135,6 +130,9 @@ public class Client implements ClientToServerTcpProtocol, ServerTcpToClientProto
         case "REQUEST_IP_OK":
         	this.requestIpOk(parsed[1], parsed[2]);
             break;
+        case "REQUEST_IP_KO":
+        	this.requestIpKo();
+        	break;
 		case "UNKNOWN_REQUEST":
 			this.unknownRequest();
 			break;
@@ -159,7 +157,6 @@ public class Client implements ClientToServerTcpProtocol, ServerTcpToClientProto
 
 	private void openConnexion() throws UnknownHostException, IOException {
 		this.s = new Socket(this.gui.getIPServeur(), port);
-		//this.is = this.s.getInputStream();
 		this.os = this.s.getOutputStream();
 		this.writer = new PrintWriter(this.os, true);
 	}
@@ -266,8 +263,10 @@ public class Client implements ClientToServerTcpProtocol, ServerTcpToClientProto
     /* Server to Client protocol */
     
     @Override
-	public void connectOk() {
+	public void connectOk(String token, String utilisateur) {
     	this.gui.printConsole("You are connected with your token with user name " + this.name + ".");
+    	this.token = token;
+    	this.name = utilisateur;
         this.gui.basePerspective();
         try {
 			this.serverUDP = new ServerUPD(this);
@@ -376,6 +375,11 @@ public class Client implements ClientToServerTcpProtocol, ServerTcpToClientProto
 			e.printStackTrace();
 		}
     	this.addChat(destinataire);
+	}
+	
+	@Override
+	public void requestIpKo() {
+		this.printConsole("Failed asking ip of client.");
 	}
 
 	@Override

@@ -39,7 +39,7 @@ public class ClientGui extends javax.swing.JFrame {
         this.client = client;
         this.updateIsConnected();
         DateFormat fmt = new SimpleDateFormat("dd/MM/yy H:mm:ss");
-        this.console.setText("[ " + fmt.format(new Date()) + " ] Démarrage du client.");
+        this.console.setText("[ " + fmt.format(new Date()) + " ] Client Started.");
     }
 
     /**
@@ -51,104 +51,105 @@ public class ClientGui extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">                          
     private void initComponents() {
 
-        jLabel1 = new javax.swing.JLabel();
-        jLabel3 = new javax.swing.JLabel();
-        isConnectedLabel = new javax.swing.JLabel();
-        nameTextField = new javax.swing.JTextField();
-        connexionButton = new javax.swing.JButton();
-        postAncButton = new javax.swing.JButton();
-        requestDomainButton = new javax.swing.JButton();
-        jTextField2 = new javax.swing.JTextField();
-        jButton4 = new javax.swing.JButton();
-        jTabbedPane1 = new javax.swing.JTabbedPane();
+        socketStateLabel = new javax.swing.JLabel();
+        nameLabel = new javax.swing.JLabel();
+        socketStateInfoLabel = new javax.swing.JLabel();
+        nameText = new javax.swing.JTextField();
+        connectButton = new javax.swing.JButton();
+        createButton = new javax.swing.JButton();
+        askDomainButton = new javax.swing.JButton();
+        msgText = new javax.swing.JTextField();
+        sendButton = new javax.swing.JButton();
+        tabbebPane = new javax.swing.JTabbedPane();
         jPanel1 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         console = new javax.swing.JTextArea();
         contactSellerButton = new javax.swing.JButton();
         jScrollPane4 = new javax.swing.JScrollPane();
-        jTextArea4 = new javax.swing.JTextArea();
-        domainComboBox = new javax.swing.JComboBox<>();
+        descriptionText = new javax.swing.JTextArea();
+        domainComboBox1 = new javax.swing.JComboBox<>();
         jScrollPane5 = new javax.swing.JScrollPane();
         listAnnonces = new javax.swing.JList<>();
-        postAncCheckBox = new javax.swing.JCheckBox();
-        jTextField3 = new javax.swing.JTextField();
-        domainComboBox1 = new javax.swing.JComboBox<>();
+        createCheckBox = new javax.swing.JCheckBox();
+        titleLabel = new javax.swing.JTextField();
+        domainComboBox2 = new javax.swing.JComboBox<>();
         ownAncButton = new javax.swing.JButton();
-        majAncButton = new javax.swing.JButton();
-        deconnexionButton = new javax.swing.JButton();
-        postAncCheckBox1 = new javax.swing.JCheckBox();
-        jTextField1 = new javax.swing.JTextField();
-        delAncButton = new javax.swing.JButton();
-        nameTextField1 = new javax.swing.JTextField();
-        postAncButton1 = new javax.swing.JButton();
+        updateButton = new javax.swing.JButton();
+        disconnectButton = new javax.swing.JButton();
+        updateCheckBox = new javax.swing.JCheckBox();
+        priceText = new javax.swing.JTextField();
+        deleteButton = new javax.swing.JButton();
+        ipText = new javax.swing.JTextField();
+        customCommandButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("Client GUI");
         setResizable(false);
 
-        jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel1.setText("Socket.isClosed()");
-        jLabel1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
-        jLabel1.setPreferredSize(new java.awt.Dimension(150, 35));
+        socketStateLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        socketStateLabel.setText("Socket.isClosed()");
+        socketStateLabel.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        socketStateLabel.setPreferredSize(new java.awt.Dimension(150, 35));
 
-        jLabel3.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel3.setText("Name");
-        jLabel3.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
-        jLabel3.setPreferredSize(new java.awt.Dimension(150, 35));
-        jLabel3.setRequestFocusEnabled(false);
+        nameLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        nameLabel.setText("Name");
+        nameLabel.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        nameLabel.setPreferredSize(new java.awt.Dimension(150, 35));
+        nameLabel.setRequestFocusEnabled(false);
 
-        isConnectedLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        isConnectedLabel.setText("is_connected");
-        isConnectedLabel.setPreferredSize(new java.awt.Dimension(150, 35));
+        socketStateInfoLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        socketStateInfoLabel.setText("is_connected");
+        socketStateInfoLabel.setPreferredSize(new java.awt.Dimension(150, 35));
 
-        nameTextField.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        nameTextField.setPreferredSize(new java.awt.Dimension(150, 35));
+        nameText.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        nameText.setPreferredSize(new java.awt.Dimension(150, 35));
 
-        connexionButton.setText("Connect");
-        connexionButton.setPreferredSize(new java.awt.Dimension(110, 35));
-        connexionButton.addActionListener(new java.awt.event.ActionListener() {
+        connectButton.setText("Connect");
+        connectButton.setPreferredSize(new java.awt.Dimension(110, 35));
+        connectButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                connexionButtonActionPerformed(evt);
+                connectButtonActionPerformed(evt);
             }
         });
 
-        postAncButton.setText("Create anc");
-        postAncButton.setEnabled(false);
-        postAncButton.setPreferredSize(new java.awt.Dimension(79, 35));
-        postAncButton.addActionListener(new java.awt.event.ActionListener() {
+        createButton.setText("Create anc");
+        createButton.setEnabled(false);
+        createButton.setPreferredSize(new java.awt.Dimension(79, 35));
+        createButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                postAncButtonActionPerformed(evt);
+                createButtonActionPerformed(evt);
             }
         });
 
-        requestDomainButton.setText("Ask domains");
-        requestDomainButton.setEnabled(false);
-        requestDomainButton.setPreferredSize(new java.awt.Dimension(79, 35));
-        requestDomainButton.addActionListener(new java.awt.event.ActionListener() {
+        askDomainButton.setText("Ask domains");
+        askDomainButton.setEnabled(false);
+        askDomainButton.setPreferredSize(new java.awt.Dimension(79, 35));
+        askDomainButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                requestDomainButtonActionPerformed(evt);
+                askDomainButtonActionPerformed(evt);
             }
         });
 
-        jTextField2.setEnabled(false);
-        jTextField2.addKeyListener(new java.awt.event.KeyAdapter() {
+        msgText.setEnabled(false);
+        msgText.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
-                jTextField2KeyPressed(evt);
+                msgTextKeyPressed(evt);
             }
         });
 
-        jButton4.setText("Send");
-        jButton4.setEnabled(false);
-        jButton4.setPreferredSize(new java.awt.Dimension(110, 35));
-        jButton4.addActionListener(new java.awt.event.ActionListener() {
+        sendButton.setText("Send");
+        sendButton.setEnabled(false);
+        sendButton.setPreferredSize(new java.awt.Dimension(110, 35));
+        sendButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton4ActionPerformed(evt);
+                sendButtonActionPerformed(evt);
             }
         });
 
-        jTabbedPane1.setFocusable(false);
-        jTabbedPane1.addChangeListener(new javax.swing.event.ChangeListener() {
+        tabbebPane.setFocusable(false);
+        tabbebPane.addChangeListener(new javax.swing.event.ChangeListener() {
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
-                jTabbedPane1StateChanged(evt);
+                tabbebPaneStateChanged(evt);
             }
         });
 
@@ -169,7 +170,7 @@ public class ClientGui extends javax.swing.JFrame {
             .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 162, Short.MAX_VALUE)
         );
 
-        jTabbedPane1.addTab("Console", jPanel1);
+        tabbebPane.addTab("Console", jPanel1);
 
         contactSellerButton.setText("Contact seller");
         contactSellerButton.setEnabled(false);
@@ -179,16 +180,16 @@ public class ClientGui extends javax.swing.JFrame {
             }
         });
 
-        jTextArea4.setEditable(false);
-        jTextArea4.setColumns(20);
-        jTextArea4.setRows(5);
-        jTextArea4.setEnabled(false);
-        jScrollPane4.setViewportView(jTextArea4);
+        descriptionText.setEditable(false);
+        descriptionText.setColumns(20);
+        descriptionText.setRows(5);
+        descriptionText.setEnabled(false);
+        jScrollPane4.setViewportView(descriptionText);
 
-        domainComboBox.setEnabled(false);
-        domainComboBox.addActionListener(new java.awt.event.ActionListener() {
+        domainComboBox1.setEnabled(false);
+        domainComboBox1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                domainComboBoxActionPerformed(evt);
+                domainComboBox1ActionPerformed(evt);
             }
         });
 
@@ -201,20 +202,20 @@ public class ClientGui extends javax.swing.JFrame {
         });
         jScrollPane5.setViewportView(listAnnonces);
 
-        postAncCheckBox.setText("Create anc");
-        postAncCheckBox.setEnabled(false);
-        postAncCheckBox.addActionListener(new java.awt.event.ActionListener() {
+        createCheckBox.setText("Create anc");
+        createCheckBox.setEnabled(false);
+        createCheckBox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                postAncCheckBoxActionPerformed(evt);
+                createCheckBoxActionPerformed(evt);
             }
         });
 
-        jTextField3.setEditable(false);
-        jTextField3.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        jTextField3.setEnabled(false);
-        jTextField3.setPreferredSize(new java.awt.Dimension(150, 35));
+        titleLabel.setEditable(false);
+        titleLabel.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        titleLabel.setEnabled(false);
+        titleLabel.setPreferredSize(new java.awt.Dimension(150, 35));
 
-        domainComboBox1.setEnabled(false);
+        domainComboBox2.setEnabled(false);
 
         ownAncButton.setText("My anc");
         ownAncButton.setEnabled(false);
@@ -225,52 +226,52 @@ public class ClientGui extends javax.swing.JFrame {
             }
         });
 
-        majAncButton.setText("Update anc");
-        majAncButton.setEnabled(false);
-        majAncButton.setPreferredSize(new java.awt.Dimension(79, 35));
-        majAncButton.addActionListener(new java.awt.event.ActionListener() {
+        updateButton.setText("Update anc");
+        updateButton.setEnabled(false);
+        updateButton.setPreferredSize(new java.awt.Dimension(79, 35));
+        updateButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                majAncButtonActionPerformed(evt);
+                updateButtonActionPerformed(evt);
             }
         });
 
-        deconnexionButton.setText("Disconnect");
-        deconnexionButton.setEnabled(false);
-        deconnexionButton.setPreferredSize(new java.awt.Dimension(110, 35));
-        deconnexionButton.addActionListener(new java.awt.event.ActionListener() {
+        disconnectButton.setText("Disconnect");
+        disconnectButton.setEnabled(false);
+        disconnectButton.setPreferredSize(new java.awt.Dimension(110, 35));
+        disconnectButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                deconnexionButtonActionPerformed(evt);
+                disconnectButtonActionPerformed(evt);
             }
         });
 
-        postAncCheckBox1.setText("Update anc");
-        postAncCheckBox1.setEnabled(false);
-        postAncCheckBox1.addActionListener(new java.awt.event.ActionListener() {
+        updateCheckBox.setText("Update anc");
+        updateCheckBox.setEnabled(false);
+        updateCheckBox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                postAncCheckBox1ActionPerformed(evt);
+                updateCheckBoxActionPerformed(evt);
             }
         });
 
-        jTextField1.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+        priceText.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
 
-        delAncButton.setText("Delete anc");
-        delAncButton.setEnabled(false);
-        delAncButton.setPreferredSize(new java.awt.Dimension(110, 35));
-        delAncButton.addActionListener(new java.awt.event.ActionListener() {
+        deleteButton.setText("Delete anc");
+        deleteButton.setEnabled(false);
+        deleteButton.setPreferredSize(new java.awt.Dimension(110, 35));
+        deleteButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                delAncButtonActionPerformed(evt);
+                deleteButtonActionPerformed(evt);
             }
         });
 
-        nameTextField1.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        nameTextField1.setText("192.168.115.130");
-        nameTextField1.setPreferredSize(new java.awt.Dimension(150, 35));
+        ipText.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        ipText.setText("192.0.0.1");
+        ipText.setPreferredSize(new java.awt.Dimension(150, 35));
 
-        postAncButton1.setText("Custom commande");
-        postAncButton1.setPreferredSize(new java.awt.Dimension(79, 35));
-        postAncButton1.addActionListener(new java.awt.event.ActionListener() {
+        customCommandButton.setText("Custom commande");
+        customCommandButton.setPreferredSize(new java.awt.Dimension(79, 35));
+        customCommandButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                postAncButton1ActionPerformed(evt);
+                customCommandButtonActionPerformed(evt);
             }
         });
 
@@ -281,51 +282,51 @@ public class ClientGui extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jTabbedPane1)
+                    .addComponent(tabbebPane)
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(postAncButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(domainComboBox, 0, 154, Short.MAX_VALUE)
-                                    .addComponent(postAncCheckBox, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(createButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(domainComboBox1, 0, 154, Short.MAX_VALUE)
+                                    .addComponent(createCheckBox, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                     .addComponent(ownAncButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(requestDomainButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(majAncButton, javax.swing.GroupLayout.DEFAULT_SIZE, 154, Short.MAX_VALUE)
-                                    .addComponent(postAncCheckBox1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                    .addComponent(askDomainButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(updateButton, javax.swing.GroupLayout.DEFAULT_SIZE, 154, Short.MAX_VALUE)
+                                    .addComponent(updateCheckBox, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(jScrollPane5)
-                                    .addComponent(postAncButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                                    .addComponent(customCommandButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                             .addGroup(layout.createSequentialGroup()
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addGroup(layout.createSequentialGroup()
-                                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(socketStateLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                        .addComponent(isConnectedLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                        .addComponent(socketStateInfoLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                                     .addGroup(layout.createSequentialGroup()
-                                        .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(nameLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(nameTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                        .addComponent(nameText, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(nameTextField1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(delAncButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                                    .addComponent(ipText, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(deleteButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(connexionButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(connectButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(18, 18, 18)
-                                .addComponent(deconnexionButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                .addComponent(disconnectButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                             .addComponent(contactSellerButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(jScrollPane4)
-                            .addComponent(jTextField3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(domainComboBox1, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jTextField1)))
+                            .addComponent(titleLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(domainComboBox2, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(priceText)))
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jTextField2)
+                        .addComponent(msgText)
                         .addGap(18, 18, 18)
-                        .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(sendButton, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -333,175 +334,176 @@ public class ClientGui extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(nameTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(connexionButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(deconnexionButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(nameTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(nameLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(nameText, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(connectButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(disconnectButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(ipText, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(isConnectedLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(delAncButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(socketStateLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(socketStateInfoLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(titleLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(deleteButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(domainComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(domainComboBox2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
                         .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(priceText, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(contactSellerButton))
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(requestDomainButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(askDomainButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(domainComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(domainComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(ownAncButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(postAncCheckBox1)
+                                .addComponent(updateCheckBox)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(majAncButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(updateButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(postAncCheckBox))
+                                .addComponent(createCheckBox))
                             .addComponent(jScrollPane5))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(postAncButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(postAncButton1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                            .addComponent(createButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(customCommandButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addGap(18, 18, 18)
-                .addComponent(jTabbedPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(tabbebPane, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(msgText, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(sendButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap())
         );
 
         pack();
     }// </editor-fold>                        
 
-    private void requestDomainButtonActionPerformed(java.awt.event.ActionEvent evt) {                                                    
+    private void askDomainButtonActionPerformed(java.awt.event.ActionEvent evt) {                                                
         this.client.requestDomain();
-        this.postAncCheckBox.setEnabled(true);
-    }                                                   
+        this.createCheckBox.setEnabled(true);
+    }                                               
 
-    private void connexionButtonActionPerformed(java.awt.event.ActionEvent evt) {                                                
-        String name = this.nameTextField.getText();
+    private void connectButtonActionPerformed(java.awt.event.ActionEvent evt) {                                              
+        String name = this.nameText.getText();
         if (name == null)
             return;
         if (name.equals("")) {
-            this.printConsole("Le nom d'utilisateur ne peut pas être vide.");
+            this.printConsole("User name shouldn't be empty.");
             return;
         }
-        this.client.connect(this.nameTextField.getText());
-    }                                               
+        this.client.connect(this.nameText.getText());
+    }                                             
 
     private void ownAncButtonActionPerformed(java.awt.event.ActionEvent evt) {                                             
         this.client.requestOwnAnnonce();
     }                                            
 
-    private void domainComboBoxActionPerformed(java.awt.event.ActionEvent evt) {                                               
+    private void domainComboBox1ActionPerformed(java.awt.event.ActionEvent evt) {                                                
         @SuppressWarnings("unchecked")
         JComboBox<String> jcb = (JComboBox<String>) evt.getSource();
         String domain = (String) jcb.getSelectedItem();
-        this.client.requestAnnonce(domain);
-    }                                              
+        if (domainComboBox1.hasFocus())
+        	this.client.requestAnnonce(domain);        
+    }                                               
 
-    private void postAncCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {                                                
+    private void createCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {                                               
         JCheckBox jcb = (JCheckBox) evt.getSource();
         if (jcb.isSelected()) {
             this.postAncPerspective();
         } else {
             this.basePerspective();
         }
-    }                                               
+    }                                              
 
-    private void postAncButtonActionPerformed(java.awt.event.ActionEvent evt) {                                              
-        String domain = (String) this.domainComboBox1.getSelectedItem();
-        String title = this.jTextField3.getText();
-        String descriptif = this.jTextArea4.getText();
-        String price = this.jTextField1.getText();
+    private void createButtonActionPerformed(java.awt.event.ActionEvent evt) {                                             
+        String domain = (String) this.domainComboBox2.getSelectedItem();
+        String title = this.titleLabel.getText();
+        String descriptif = this.descriptionText.getText();
+        String price = this.priceText.getText();
         if (descriptif.contains("\n")) {
-            this.printConsole("Descriptif invalide");
+            this.printConsole("Invalid descriptif.");
             return;
         }
         if (!price.matches("^[0-9]+\\.?[0-9]{0,2}")) {
-            this.printConsole("Prix non valide.");
+            this.printConsole("Non valid price.");
             return;
         }
         this.client.postAnc(domain, title, descriptif, price);
-        this.jTextField3.setText("");
-        this.jTextArea4.setText("");
-        this.jTextField1.setText("");
-    }                                             
+        this.titleLabel.setText("");
+        this.descriptionText.setText("");
+        this.priceText.setText("");
+    }                                            
 
-    private void deconnexionButtonActionPerformed(java.awt.event.ActionEvent evt) {                                                  
+    private void disconnectButtonActionPerformed(java.awt.event.ActionEvent evt) {                                                 
         this.client.disconnect();
-        this.nameTextField1.setEnabled(true);
-        this.connexionButton.setEnabled(true);
-        this.deconnexionButton.setEnabled(false);
-        this.requestDomainButton.setEnabled(false);
-        this.domainComboBox.setEnabled(false);
-        this.ownAncButton.setEnabled(false);
-        this.postAncCheckBox.setEnabled(false);
-        this.majAncButton.setEnabled(false);
-        this.postAncButton.setEnabled(false);
-        this.postAncButton.setEnabled(false);
-        this.delAncButton.setEnabled(false);
-        this.jTextField3.setEnabled(false);
+        this.ipText.setEnabled(true);
+        this.connectButton.setEnabled(true);
+        this.disconnectButton.setEnabled(false);
+        this.askDomainButton.setEnabled(false);
         this.domainComboBox1.setEnabled(false);
-        this.jTextArea4.setEnabled(false);
-        this.jTextField1.setEnabled(false);
+        this.ownAncButton.setEnabled(false);
+        this.createCheckBox.setEnabled(false);
+        this.updateButton.setEnabled(false);
+        this.createButton.setEnabled(false);
+        this.createButton.setEnabled(false);
+        this.deleteButton.setEnabled(false);
+        this.titleLabel.setEnabled(false);
+        this.domainComboBox2.setEnabled(false);
+        this.descriptionText.setEnabled(false);
+        this.priceText.setEnabled(false);
         this.contactSellerButton.setEnabled(false);
         this.updateIsConnected();
-    }                                                 
+    }                                                
 
     private void listAnnoncesMousePressed(java.awt.event.MouseEvent evt) {                                          
         if (this.listAnnonces.getModel() == null || this.storeAnnonces == null)
             return;
         int idx = this.listAnnonces.getSelectedIndex();
         this.contactSellerButton.setEnabled(true);
-        this.jTextField3.setText(this.storeAnnonces[idx * 5 + 2]);
-        this.jTextArea4.setText(this.storeAnnonces[idx * 5 + 3]);
-        this.jTextField1.setText(this.storeAnnonces[idx * 5 + 4]);
+        this.titleLabel.setText(this.storeAnnonces[idx * 5 + 2]);
+        this.descriptionText.setText(this.storeAnnonces[idx * 5 + 3]);
+        this.priceText.setText(this.storeAnnonces[idx * 5 + 4]);
     }                                         
 
-    private void postAncCheckBox1ActionPerformed(java.awt.event.ActionEvent evt) {                                                 
+    private void updateCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {                                               
         JCheckBox jcb = (JCheckBox) evt.getSource();
         if (jcb.isSelected()) {
             this.updateDelAncPerspective();
         } else {
             this.basePerspective();
         }
-    }                                                
+    }                                              
 
-    private void majAncButtonActionPerformed(java.awt.event.ActionEvent evt) {                                             
+    private void updateButtonActionPerformed(java.awt.event.ActionEvent evt) {                                             
         int idx = this.listAnnonces.getSelectedIndex();
         if (idx == -1)
             return;
         String id = this.storeAnnonces[idx * 5];
-        String domain = (String) this.domainComboBox1.getSelectedItem();
-        String title = this.jTextField3.getText();
-        String descriptif = this.jTextArea4.getText();
-        String price = this.jTextField1.getText();
+        String domain = (String) this.domainComboBox2.getSelectedItem();
+        String title = this.titleLabel.getText();
+        String descriptif = this.descriptionText.getText();
+        String price = this.priceText.getText();
         if (!price.matches("^[0-9]+\\.?[0-9]{0,2}")) {
             this.printConsole("Prix non valide.");
         } else { 
             this.client.majAnc(id, domain, title, descriptif, price);
-            this.jTextField3.setText("");
-            this.jTextArea4.setText("");
-            this.jTextField1.setText("");
+            this.titleLabel.setText("");
+            this.descriptionText.setText("");
+            this.priceText.setText("");
             this.listAnnonces.setModel(new DefaultListModel<>());
             this.client.requestOwnAnnonce();
         }
     }                                            
 
-    private void delAncButtonActionPerformed(java.awt.event.ActionEvent evt) {                                             
+    private void deleteButtonActionPerformed(java.awt.event.ActionEvent evt) {                                             
         int idx = this.listAnnonces.getSelectedIndex();
         if (idx == -1)
             return;
@@ -519,29 +521,29 @@ public class ClientGui extends javax.swing.JFrame {
         this.client.requestIP(id);
     }                                                   
 
-    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {                                         
-       try {
-			this.client.sendMessage(this.jTabbedPane1.getTitleAt(this.jTabbedPane1.getSelectedIndex()), this.jTextField2.getText());
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-       this.jTextField2.setText("");
-    }                                        
+    private void sendButtonActionPerformed(java.awt.event.ActionEvent evt) {                                           
+   try {
+                this.client.sendMessage(this.tabbebPane.getTitleAt(this.tabbebPane.getSelectedIndex()), this.msgText.getText());
+        } catch (IOException e) {
+                e.printStackTrace();
+        }
+    this.msgText.setText("");
+    }                                          
 
-    private void jTabbedPane1StateChanged(javax.swing.event.ChangeEvent evt) {                                          
-        int idx = this.jTabbedPane1.getSelectedIndex();
+    private void tabbebPaneStateChanged(javax.swing.event.ChangeEvent evt) {                                        
+        int idx = this.tabbebPane.getSelectedIndex();
         if (idx != 0) {
-            this.jButton4.setEnabled(true);
-            this.jTextField2.setEnabled(true);
+            this.sendButton.setEnabled(true);
+            this.msgText.setEnabled(true);
         }
         else {
-            this.jButton4.setEnabled(false);
-            this.jTextField2.setEnabled(false);
-            this.jTextField2.setText("");
+            this.sendButton.setEnabled(false);
+            this.msgText.setEnabled(false);
+            this.msgText.setText("");
         }
-    }                                         
+    }                                       
 
-    private void postAncButton1ActionPerformed(java.awt.event.ActionEvent evt) {                                               
+    private void customCommandButtonActionPerformed(java.awt.event.ActionEvent evt) {                                                    
         JTextArea textArea = new JTextArea();
         JOptionPane.showMessageDialog(null, new JScrollPane(textArea), "Write custom command.", JOptionPane.QUESTION_MESSAGE);
         try {
@@ -549,12 +551,12 @@ public class ClientGui extends javax.swing.JFrame {
         } catch (IOException e) {
                 e.printStackTrace();
         }
-    }                                              
+    }                                                   
 
-    private void jTextField2KeyPressed(java.awt.event.KeyEvent evt) {                                       
+    private void msgTextKeyPressed(java.awt.event.KeyEvent evt) {                                   
         if (evt.getKeyCode() == KeyEvent.VK_ENTER)
-            this.jButton4ActionPerformed(null);
-    }                                      
+            this.sendButtonActionPerformed(null);
+    }                                  
 
     /**
      * @param args the command line arguments
@@ -597,144 +599,146 @@ public class ClientGui extends javax.swing.JFrame {
     }
     
     // Variables declaration - do not modify                     
-    private javax.swing.JButton connexionButton;
+    private javax.swing.JButton askDomainButton;
+    private javax.swing.JButton connectButton;
     private javax.swing.JTextArea console;
     private javax.swing.JButton contactSellerButton;
-    private javax.swing.JButton deconnexionButton;
-    private javax.swing.JButton delAncButton;
-    private javax.swing.JComboBox<String> domainComboBox;
+    private javax.swing.JButton createButton;
+    private javax.swing.JCheckBox createCheckBox;
+    private javax.swing.JButton customCommandButton;
+    private javax.swing.JButton deleteButton;
+    private javax.swing.JTextArea descriptionText;
+    private javax.swing.JButton disconnectButton;
     private javax.swing.JComboBox<String> domainComboBox1;
-    private javax.swing.JLabel isConnectedLabel;
-    private javax.swing.JButton jButton4;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel3;
+    private javax.swing.JComboBox<String> domainComboBox2;
+    private javax.swing.JTextField ipText;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JScrollPane jScrollPane5;
-    private javax.swing.JTabbedPane jTabbedPane1;
-    private javax.swing.JTextArea jTextArea4;
-    private javax.swing.JTextField jTextField1;
-    private javax.swing.JTextField jTextField2;
-    private javax.swing.JTextField jTextField3;
     private javax.swing.JList<String> listAnnonces;
-    private javax.swing.JButton majAncButton;
-    private javax.swing.JTextField nameTextField;
-    private javax.swing.JTextField nameTextField1;
+    private javax.swing.JTextField msgText;
+    private javax.swing.JLabel nameLabel;
+    private javax.swing.JTextField nameText;
     private javax.swing.JButton ownAncButton;
-    private javax.swing.JButton postAncButton;
-    private javax.swing.JButton postAncButton1;
-    private javax.swing.JCheckBox postAncCheckBox;
-    private javax.swing.JCheckBox postAncCheckBox1;
-    private javax.swing.JButton requestDomainButton;
+    private javax.swing.JTextField priceText;
+    private javax.swing.JButton sendButton;
+    private javax.swing.JLabel socketStateInfoLabel;
+    private javax.swing.JLabel socketStateLabel;
+    private javax.swing.JTabbedPane tabbebPane;
+    private javax.swing.JTextField titleLabel;
+    private javax.swing.JButton updateButton;
+    private javax.swing.JCheckBox updateCheckBox;
     // End of variables declaration                   
 
     public void updateIsConnected() {
-        this.isConnectedLabel.setText(String.valueOf(this.client.isConnected()));
+        this.socketStateInfoLabel.setText(String.valueOf(this.client.isConnected()));
     }
     
     public void printConsole(String msg) {
         DateFormat fmt = new SimpleDateFormat("dd/MM/yy H:mm:ss");
         this.console.setText(this.console.getText() + "\n" + "[ " + fmt.format(new Date()) + " ] " +  msg);
     }
-    
+    /*
     public void updateDomainsPostAnc(String[] domains) {
-        this.domainComboBox1.removeAllItems();
+        this.domainComboBox2.removeAllItems();
         for (String s : domains)
-            this.domainComboBox1.addItem(s);
+            this.domainComboBox2.addItem(s);
     }
-    
+    */
     public void updateDomains(String[] domains) {
-        this.domainComboBox.removeAllItems();
         this.domainComboBox1.removeAllItems();
+        this.domainComboBox2.removeAllItems();
         for (String s : domains) {
-            this.domainComboBox.addItem(s);
             this.domainComboBox1.addItem(s);
+            this.domainComboBox2.addItem(s);
         }
     }
     
     public void updateAnnoncesList(String[] annonces) {
+    	//this.listAnnonces.setEnabled(false);
         this.storeAnnonces = annonces;
         DefaultListModel<String> newModel = new DefaultListModel<>();
         if (annonces != null)
             for (int i = 0; i < annonces.length; i += 5)
                 newModel.addElement("Annonce " + annonces[i]);
         this.listAnnonces.setModel(newModel);
+        //this.listAnnonces.setEnabled(true);
     }
     
     private void postAncPerspective() {
         this.listAnnonces.setModel(new DefaultListModel<>());
         this.listAnnonces.setEnabled(false);
-        this.requestDomainButton.setEnabled(false);
-        this.domainComboBox.setEnabled(false);
+        this.askDomainButton.setEnabled(false);
+        this.domainComboBox1.setEnabled(false);
         this.ownAncButton.setEnabled(false);
-        this.majAncButton.setEnabled(false);
-        this.postAncButton.setEnabled(true);
-        this.postAncCheckBox.setEnabled(true);
-        this.postAncCheckBox1.setEnabled(false);
+        this.updateButton.setEnabled(false);
+        this.createButton.setEnabled(true);
+        this.createCheckBox.setEnabled(true);
+        this.updateCheckBox.setEnabled(false);
         this.contactSellerButton.setEnabled(false);
-        this.jTextArea4.setEditable(true);
-        this.jTextField3.setEditable(true);
-        this.jTextField1.setEditable(true);
-        this.domainComboBox1.setEnabled(true);
+        this.descriptionText.setEditable(true);
+        this.titleLabel.setEditable(true);
+        this.priceText.setEditable(true);
+        this.domainComboBox2.setEnabled(true);
         this.listAnnonces.setEnabled(true);
-        this.jTextField3.setText("");
-        this.jTextArea4.setText("");
-        this.jTextField1.setText("");
+        this.titleLabel.setText("");
+        this.descriptionText.setText("");
+        this.priceText.setText("");
     }
     
     public void basePerspective() {
-        this.jButton4.setEnabled(false);
-        this.nameTextField.setEnabled(false);
-        this.delAncButton.setEnabled(false);
-        this.majAncButton.setEnabled(false);
-        this.connexionButton.setEnabled(false);
-        this.requestDomainButton.setEnabled(true);
-        this.domainComboBox.setEnabled(true);
+        this.sendButton.setEnabled(false);
+        this.nameText.setEnabled(false);
+        this.deleteButton.setEnabled(false);
+        this.updateButton.setEnabled(false);
+        this.connectButton.setEnabled(false);
+        this.askDomainButton.setEnabled(true);
+        this.domainComboBox1.setEnabled(true);
         this.ownAncButton.setEnabled(true);
-        this.jTextArea4.setEnabled(true);
-        this.jTextField1.setEnabled(true);
-        this.jTextField3.setEnabled(true);
-        this.jTextField3.setEditable(false);
-        this.jTextField1.setEditable(false);
-        this.postAncButton.setEnabled(false);
-        this.domainComboBox1.setEnabled(false);
+        this.descriptionText.setEnabled(true);
+        this.priceText.setEnabled(true);
+        this.titleLabel.setEnabled(true);
+        this.titleLabel.setEditable(false);
+        this.priceText.setEditable(false);
+        this.createButton.setEnabled(false);
+        this.domainComboBox2.setEnabled(false);
         this.listAnnonces.setEnabled(true);
-        this.connexionButton.setEnabled(false);
-        this.deconnexionButton.setEnabled(true);
-        this.nameTextField.setEditable(false);
-        this.jTextField3.setText("");
-        this.jTextArea4.setText("");
-        this.jTextField1.setText("");
+        this.connectButton.setEnabled(false);
+        this.disconnectButton.setEnabled(true);
+        this.nameText.setEditable(false);
+        this.titleLabel.setText("");
+        this.descriptionText.setText("");
+        this.priceText.setText("");
     }
     
     private void updateDelAncPerspective() {
         this.listAnnonces.clearSelection();
-        this.delAncButton.setEnabled(true);
-        this.postAncCheckBox.setEnabled(false);
-        this.majAncButton.setEnabled(true);
-        this.requestDomainButton.setEnabled(false);
-        this.domainComboBox.setEnabled(false);
+        this.deleteButton.setEnabled(true);
+        this.createCheckBox.setEnabled(false);
+        this.updateButton.setEnabled(true);
+        this.askDomainButton.setEnabled(false);
+        this.domainComboBox1.setEnabled(false);
         this.ownAncButton.setEnabled(false);
-        this.postAncButton.setEnabled(false);
+        this.createButton.setEnabled(false);
         this.contactSellerButton.setEnabled(false);
-        this.jTextArea4.setEditable(true);
-        this.jTextField3.setEditable(true);
-        this.jTextField1.setEditable(true);
-        this.domainComboBox1.setEnabled(true);
+        this.descriptionText.setEditable(true);
+        this.titleLabel.setEditable(true);
+        this.priceText.setEditable(true);
+        this.domainComboBox2.setEnabled(true);
         this.contactSellerButton.setEnabled(false);
         this.listAnnonces.setEnabled(true);
-        this.jTextField3.setText("");
-        this.jTextArea4.setText("");
-        this.jTextField1.setText("");
+        this.titleLabel.setText("");
+        this.descriptionText.setText("");
+        this.priceText.setText("");
     }
     
     public void allowUpdateOwnAnnonce() {
-        this.postAncCheckBox1.setEnabled(true);
+        this.updateCheckBox.setEnabled(true);
     }
     
     public String getIPServeur() {
-        return this.nameTextField1.getText();
+        return this.ipText.getText();
     }
     
     void addConv(String destinataire) {
@@ -761,9 +765,9 @@ public class ClientGui extends javax.swing.JFrame {
             .addComponent(jscrol, javax.swing.GroupLayout.DEFAULT_SIZE, 162, Short.MAX_VALUE)
         );
 
-        jTabbedPane1.addTab(destinataire, pan);
+        tabbebPane.addTab(destinataire, pan);
         
-        this.jTabbedPane1.addTab(destinataire, pan);
+        this.tabbebPane.addTab(destinataire, pan);
     }
     
     public boolean existsConv(String name) {
@@ -782,4 +786,4 @@ public class ClientGui extends javax.swing.JFrame {
             }
         }
     }
-}
+}	
