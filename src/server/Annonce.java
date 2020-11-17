@@ -8,7 +8,7 @@ public class Annonce {
 	private String descriptif;
 	private double prix;
 
-	public Annonce (Domain d, String titre, String descriptif, float prix, int id) {
+	public Annonce (Domain d, String titre, String descriptif, double prix, int id) {
 		this.id = id;
 		this.setDomain(d);
 		this.setTitre(titre);

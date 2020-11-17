@@ -471,6 +471,7 @@ public class ClientGui extends javax.swing.JFrame {
         this.titleLabel.setText(this.storeAnnonces[idx * 5 + 2]);
         this.descriptionText.setText(this.storeAnnonces[idx * 5 + 3]);
         this.priceText.setText(this.storeAnnonces[idx * 5 + 4]);
+        this.domainComboBox2.setSelectedItem(this.storeAnnonces[idx * 5 + 1]);
     }                                         
 
     private void updateCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {                                               
@@ -547,9 +548,9 @@ public class ClientGui extends javax.swing.JFrame {
         JTextArea textArea = new JTextArea();
         JOptionPane.showMessageDialog(null, new JScrollPane(textArea), "Write custom command.", JOptionPane.QUESTION_MESSAGE);
         try {
-                this.client.sendCustomCommand(textArea.getText());
+            this.client.sendCustomCommand(textArea.getText() + ".");
         } catch (IOException e) {
-                e.printStackTrace();
+           e.printStackTrace();
         }
     }                                                   
 

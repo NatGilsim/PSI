@@ -44,7 +44,7 @@ public class ClientServer {
 		return null;
 	}
 
-	public boolean addAnnonce(Domain dom, String titre, String description, float prix, int id) {
+	public boolean addAnnonce(Domain dom, String titre, String description, double prix, int id) {
 		return this.annonces.add(new Annonce(dom, titre, description, prix, id));
 	}
 

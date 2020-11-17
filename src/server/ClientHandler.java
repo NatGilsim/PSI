@@ -112,7 +112,7 @@ public class ClientHandler implements Runnable {
 				ServerTCP.delHandler(this);
 				break;
 			case "POST_ANC":
-				float prixAnnonce = Float.valueOf(parsed[4]);
+				double prixAnnonce = Double.valueOf(parsed[4]);
 				if (!ServerTCP.domainExists(parsed[1].toLowerCase())) {
 					System.out.println("[Serveur] Echec de création d'annonce par le client " + this.client.getName() + ".");
 					this.pw.println("POST_ANC_KO");
@@ -180,9 +180,7 @@ public class ClientHandler implements Runnable {
 					System.out.println("[Serveur] Envoie des annonces de  " + this.client.getName() + " à lui-même.");
 					this.pw.println("SEND_OWN_ANC_OK");
 					for (Annonce a : ServerTCP.getClientFromToken(this.client.getToken()).getAnnonces()) {
-						System.out.println(Integer.toString(a.getId()));
 						this.pw.println(Integer.toString(a.getId()));
-						System.out.println(a.getDomain());
 						this.pw.println(a.getDomain().name());
 						this.pw.println(a.getTitre());
 						this.pw.println(a.getDescriptif());
@@ -246,7 +244,7 @@ public class ClientHandler implements Runnable {
 		this.client.setIsConnected(false);
 	}
 
-	private boolean addAnnonce(Domain dom, String titre, String description, float prix, int id) {
+	private boolean addAnnonce(Domain dom, String titre, String description, double prix, int id) {
 		return this.client.addAnnonce(dom, titre, description, prix, id);
 	}
 
