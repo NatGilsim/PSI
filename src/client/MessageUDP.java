@@ -1,43 +1,24 @@
 package client;
 
-public class MessageUDP {
+public class MessageUDP extends MessageChat {
 	
 	private String destinataire;
-	private String content;
-	private long timestamp;
 	private Boolean ack;
 	private int counter;
 	
-	public MessageUDP(String destinataire, String msg, long timestamp) {
+	public MessageUDP(String emetteur, String destinataire, String content, long timestamp) {
+		super(emetteur, content, timestamp);
 		this.destinataire = destinataire;
-		this.content = msg;
 		this.ack = false;
-		this.timestamp = timestamp;
 		this.counter = 0;
-	}
-	
-	public String getContent() {
-		return this.content;
-	}
-	
-	public String getDestinataire() {
-		return this.destinataire;
 	}
 	
 	public void setAck(boolean ack) {
 		this.ack = ack;
 	}
 	
-	public void setTimestamp() {
-		this.timestamp = System.currentTimeMillis();
-	}
-	
 	public boolean getAck() {
 		return this.ack;
-	}
-	
-	public long getTimestamp() {
-		return this.timestamp;
 	}
 	
 	public int getCounter() {
@@ -45,6 +26,10 @@ public class MessageUDP {
 	}
 	
 	public void incrementCounter() {
-		this.counter++;
+		this.counter = this.counter + 1;
+	}
+	
+	public String getDestinataire() {
+		return this.destinataire;
 	}
 }

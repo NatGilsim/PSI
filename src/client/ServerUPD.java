@@ -52,8 +52,9 @@ public class ServerUPD extends Thread implements ClientToServerUdpProtocol {
 			emetteur = parsed[1];
 			timestamp = parsed[2];
 			msg = parsed[3];
-			if (!this.peers.containsKey(emetteur))
-    			this.peers.put(emetteur, ip);
+			if (!this.peers.containsKey(emetteur)) {
+				this.peers.put(emetteur, ip);
+			}
 			this.msg(emetteur, timestamp, msg);
 			break;
 		case "MSG_ACK":
@@ -77,17 +78,17 @@ public class ServerUPD extends Thread implements ClientToServerUdpProtocol {
 		senderSock.send(dpSend);
 	}
 	
-	public void sendMessage(String to, String msg) throws IOException {
+	public void sendMessage(String to, String msg, long timestamp, boolean isAck) throws IOException {
 		String pck;
-		long timestamp;
 		pck = "MSG" + "\n";
 		pck += this.client.getName() + "\n";
-		timestamp = System.currentTimeMillis();
 		pck += timestamp + "\n";
 		pck += msg + "\n";
 		pck += ".";
+		//System.out.println("to: " + to + "  ip adress:" + peers.get(to));
 		dpSend = new DatagramPacket(pck.getBytes(), pck.getBytes().length, peers.get(to), 7201);
-		this.client.getAcknowledgementMap().put(this.client.getName() + timestamp, new MessageUDP(to, msg, timestamp));
+		if (!isAck)
+			this.client.addMsgAcknoledgement(new MessageUDP(this.client.getName(), to, msg, timestamp));
 		this.client.printConsole("Message <" + msg + "> from <" + this.client.getName() + "> with timestamp <" + timestamp + "> send to <" + to + "> waiting for aknowledgement.");
 		senderSock.send(dpSend);
 	}
@@ -105,31 +106,30 @@ public class ServerUPD extends Thread implements ClientToServerUdpProtocol {
     	}
     	
     	public void run() {
-    		ArrayList<String> toDelete = new ArrayList<>();
-    		for (Map.Entry<String, MessageUDP> entry : this.client.getAcknowledgementMap().entrySet()) {
-    			String idMsg = entry.getKey();
-    			MessageUDP msg = entry.getValue();
-    			if (!msg.getAck()) {
-    				if ((System.currentTimeMillis() - msg.getTimestamp()) >= Math.pow(2, msg.getCounter())) {
-    					if (msg.getCounter() == (limitAck + 1)) {
-    						this.client.printConsole("Message <" + msg.getContent() + "> to <" + msg.getDestinataire() + "> was never aknowledged and is now deleted, please send again the message.");
-    						msg.setTimestamp();
-    						toDelete.add(idMsg);
+    		ArrayList<MessageUDP> toDelete = new ArrayList<>();
+    		for (MessageUDP m : this.client.getAckMsg()) {
+    			if (!m.getAck()) {
+    				if ((System.currentTimeMillis() - m.getTimestamp()) >= Math.pow(2, m.getCounter()) * 1000) {
+    					if (m.getCounter() == (limitAck + 1)) {
+    						
+    						this.client.printConsole("Message <" + m.getContent() + "> with timestamp <" + m.getTimestamp() + "> was never aknowledged and is now deleted, please send again the message.");
+    						toDelete.add(m);
     					} else {
 		    				try {
-								sendMessage(msg.getDestinataire(), msg.getContent());
+		    					m.setTimestamp();
+								sendMessage(m.getDestinataire(), m.getContent(), m.getTimestamp(), true);
 							} catch (IOException e) {
 								e.printStackTrace();
 							}
-		    				msg.incrementCounter();
+		    				m.incrementCounter();
     					}
     				}
     			} else {
-    				toDelete.add(idMsg);
+    				toDelete.add(m);
     			}
     		}
-    		for (String s : toDelete)
-    			this.client.getAcknowledgementMap().remove(s);
+    		for (MessageUDP m : toDelete)
+    			this.client.getAckMsg().remove(m);
     	}
     }
 
@@ -139,7 +139,7 @@ public class ServerUPD extends Thread implements ClientToServerUdpProtocol {
 	public void msg(String emetteur, String timestamp, String msg) {
 		this.client.printConsole("Message <" + msg + "> received from <" + emetteur + "> with timestamp <" + timestamp + "> and sending aknoledgement.");
 		this.client.addChat(emetteur);
-		this.client.receiveMsg(emetteur, " [From] " + msg);
+		this.client.receiveMsg(emetteur, timestamp, msg);
 		try {
 			this.sendAck(emetteur, timestamp);
 		} catch (IOException e) {
@@ -149,10 +149,14 @@ public class ServerUPD extends Thread implements ClientToServerUdpProtocol {
 
 	@Override
 	public void msgAck(String emetteur, String timestamp) {
-		if (this.client.getAcknowledgementMap().containsKey(emetteur + timestamp)) {
+		/*
+		if (this.client.addMsg().containsKey(emetteur + timestamp)) {
 			this.client.printConsole("Message from <" + emetteur + "> with timestamp <" + timestamp + "> is aknowledged.");
-			this.client.getAcknowledgementMap().get(emetteur + timestamp).setAck(true);
+			this.client.addMsg().get(emetteur + timestamp).setAck(true);
 		}
+		*/
+		//this.client.printConsole("Message from <" + emetteur + "> with timestamp <" + timestamp + "> is aknowledged.");
+		
 	}
 	
 }

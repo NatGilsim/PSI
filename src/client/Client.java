@@ -8,11 +8,13 @@ import java.io.PrintWriter;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Client implements ClientToServerTcpProtocol, ServerTcpToClientProtocol {
+public class Client implements ServerTcpToClientProtocol, ClientToServerTcpProtocol {
 
 	private Socket s = null;
 	private OutputStream os = null;
@@ -24,7 +26,9 @@ public class Client implements ClientToServerTcpProtocol, ServerTcpToClientProto
 	private Thread inputCmd; // thread use to process cmd receive from server (run only when client is connected to server)
 	private ClientGui gui;
 	private ServerUPD serverUDP;
-	private Map<String, MessageUDP> acknowledgementMsg = new HashMap<String, MessageUDP>();
+	//private Map<String, MessageUDP> acknowledgementMsg = new HashMap<String, MessageUDP>();
+	private ArrayList<MessageUDP> acknowledgementMsg = new ArrayList<>();
+	private Map<String, ArrayList<MessageChat>> chatMsg = new HashMap<String, ArrayList<MessageChat>>();
 
 	public Client(int port) throws UnknownHostException, IOException {
 		this.port = port;
@@ -401,30 +405,78 @@ public class Client implements ClientToServerTcpProtocol, ServerTcpToClientProto
     }
     
     public void addChat(String destinataire) {
-    	if (!this.gui.existsConv(destinataire))
+    	if (!this.gui.existsConv(destinataire)) {
 			this.gui.addConv(destinataire);
+			this.chatMsg.put(destinataire, new ArrayList<MessageChat>());
+    	}
     }
     
     public void sendMessage(String to, String msg) throws IOException {
-    	this.gui.writeTabbedPane(to, " [To] " + msg);
-    	this.serverUDP.sendMessage(to, msg);
+    	//this.gui.writeTabbedPane(to, " [To] " + msg);
+    	//this.chatMsg.put(to, new MessageUDP(msg, System.currentTimeMillis()));
+    	long timestamp = System.currentTimeMillis();
+    	this.addMsgChat(to, new MessageChat(this.name, msg, timestamp));
+    	this.serverUDP.sendMessage(to, msg, timestamp, false);
     }
 
     public void printConsole(String msg) {
     	this.gui.printConsole(msg);
     }
     
-    public Map<String, MessageUDP> getAcknowledgementMap() {
+    private String buildConv(String conv) {
+    	String c = "";
+    	Collections.sort(this.chatMsg.get(conv));
+    	for (MessageChat mc : this.chatMsg.get(conv)) {
+    		if (mc.getEmetteur().equals(this.name))
+    			c += "[TO]  ";
+    		else
+    			c += "[FROM]";
+    		c += mc.getContent() + "\n";
+    	}
+    	return c;
+    }
+    
+    public void addMsgChat(String conv, MessageChat msg) {
+    	this.chatMsg.get(conv).add(msg);
+    	this.buildConv(conv);
+    	this.gui.refreshConv(conv, this.buildConv(conv));
+    }
+    
+    public void addMsgAcknoledgement(MessageUDP msg) {
+    	this.acknowledgementMsg.add(msg);
+    }
+    /*
+    public getAckMsg() {
+    	
+    }*/
+    /*
+    public void aknoledgeMsg() {
+    	for (MessageUDP m : this.acknowledgementMsg) {
+    		
+    	}
+    }
+    */
+    
+    public ArrayList<MessageUDP> getAckMsg() {
     	return this.acknowledgementMsg;
     }
 
+    /*
+    public Map<String, ArrayList<MessageUDP>> MsgAcknoledgement() {
+    	return this.chatMsg;
+    }
+    */
+    
     public static void main(String[] args ) throws IOException {
 		Client c = new Client(1027);
 	}
     
-	public void receiveMsg(String emetteur, String msg) {
+	public void receiveMsg(String emetteur, String timestamp, String msg) {
 		if (!this.gui.existsConv(emetteur))
 			this.gui.addConv(emetteur);
-		this.gui.writeTabbedPane(emetteur, msg);
+		this.addMsgChat(emetteur, new MessageChat(emetteur, msg, Long.parseLong(timestamp)));
+		//this.chatMsg.put(emetteur, timestamp + "." + msg);
+		//this.addMsg(emetteur,  new MessageUDP(msg, Long.parseLong(timestamp)));
+		//this.gui.writeTabbedPane(emetteur, this.chatMsg.get(emetteur));
 	}
 }

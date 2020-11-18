@@ -523,11 +523,11 @@ public class ClientGui extends javax.swing.JFrame {
     }                                                   
 
     private void sendButtonActionPerformed(java.awt.event.ActionEvent evt) {                                           
-   try {
-                this.client.sendMessage(this.tabbebPane.getTitleAt(this.tabbebPane.getSelectedIndex()), this.msgText.getText());
-        } catch (IOException e) {
-                e.printStackTrace();
-        }
+    	try {
+		        this.client.sendMessage(this.tabbebPane.getTitleAt(this.tabbebPane.getSelectedIndex()), this.msgText.getText());
+		} catch (IOException e) {
+		        e.printStackTrace();
+		}
     this.msgText.setText("");
     }                                          
 
@@ -780,10 +780,24 @@ public class ClientGui extends javax.swing.JFrame {
     	return false;
     }
     
-    public void writeTabbedPane(String nameComponent, String msg) {
+    public void refreshConv(String nameChat, String conv) {
+    	for (JTextArea jta : this.areasInPane) {
+            if (jta.getName().equals(nameChat)) {
+            	jta.setText(conv);
+            	return;
+            }
+        }
+    }
+    
+    // ajout [FROM]
+    public void writeTabbedPane(String nameChat, String[] msg) {
         for (JTextArea jta : this.areasInPane) {
-            if (jta.getName().equals(nameComponent)) {
-                jta.setText(jta.getText() + "\n" + msg);
+            if (jta.getName().equals(nameChat)) {
+            	String content = "";
+            	for (String m : msg) {
+            		jta.setText(jta.getText() + "\n" + msg);
+            	}
+            	return;
             }
         }
     }
