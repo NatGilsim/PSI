@@ -93,7 +93,6 @@ public class ClientHandler implements Runnable {
 							this.pw.println(".");
 						} else {
 							String ip = (((InetSocketAddress) this.s.getRemoteSocketAddress()).getAddress()).toString().replace("/","");
-							System.out.println(ip);
 							ClientServer newClientServer = new ClientServer(parsed[1], ServerTCP.createToken(), ip);
 							this.client = newClientServer;
 							ServerTCP.clients.add(newClientServer);
@@ -224,10 +223,15 @@ public class ClientHandler implements Runnable {
 				break;
 			case "REQUEST_IP":
 				ClientServer c = ServerTCP.getClientFromIdAnnonce(parsed[1]);
-				this.pw.println("REQUEST_IP_OK");
-				this.pw.println(c.getIP());
-				this.pw.println(c.getName());
-				this.pw.println(".");
+				if (c.getIsConnected()) {
+					this.pw.println("REQUEST_IP_OK");
+					this.pw.println(c.getIP());
+					this.pw.println(c.getName());
+					this.pw.println(".");
+				} else {
+					this.pw.println("REQUEST_IP_KO");
+					this.pw.println(".");
+				}
 				break;
 			default:
 				System.out.println("[Serveur] " + parsed[0] + " est une requête inconnue.");

@@ -264,7 +264,7 @@ public class ClientGui extends javax.swing.JFrame {
         });
 
         ipText.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        ipText.setText("192.0.0.1");
+        ipText.setText("192.168.115.130");
         ipText.setPreferredSize(new java.awt.Dimension(150, 35));
 
         customCommandButton.setText("Custom commande");

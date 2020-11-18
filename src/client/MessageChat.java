@@ -28,11 +28,9 @@ public class MessageChat implements Comparable<MessageChat> {
 		return this.emetteur;
 	}
 	
-	/*
 	public String getIdMsg() {
 		return this.emetteur + this.timestamp;
 	}
-	 */
 	
 	@Override
 	public int compareTo(MessageChat m) {

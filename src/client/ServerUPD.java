@@ -88,7 +88,7 @@ public class ServerUPD extends Thread implements ClientToServerUdpProtocol {
 		//System.out.println("to: " + to + "  ip adress:" + peers.get(to));
 		dpSend = new DatagramPacket(pck.getBytes(), pck.getBytes().length, peers.get(to), 7201);
 		if (!isAck)
-			this.client.addMsgAcknoledgement(new MessageUDP(this.client.getName(), to, msg, timestamp));
+			this.client.addMsgToBeAcknowledge(new MessageUDP(this.client.getName(), to, msg, timestamp));
 		this.client.printConsole("Message <" + msg + "> from <" + this.client.getName() + "> with timestamp <" + timestamp + "> send to <" + to + "> waiting for aknowledgement.");
 		senderSock.send(dpSend);
 	}
@@ -107,7 +107,7 @@ public class ServerUPD extends Thread implements ClientToServerUdpProtocol {
     	
     	public void run() {
     		ArrayList<MessageUDP> toDelete = new ArrayList<>();
-    		for (MessageUDP m : this.client.getAckMsg()) {
+    		for (MessageUDP m : this.client.getMsgToBeAcknowledge()) {
     			if (!m.getAck()) {
     				if ((System.currentTimeMillis() - m.getTimestamp()) >= Math.pow(2, m.getCounter()) * 1000) {
     					if (m.getCounter() == (limitAck + 1)) {
@@ -129,7 +129,7 @@ public class ServerUPD extends Thread implements ClientToServerUdpProtocol {
     			}
     		}
     		for (MessageUDP m : toDelete)
-    			this.client.getAckMsg().remove(m);
+    			this.client.getMsgToBeAcknowledge().remove(m);
     	}
     }
 
@@ -149,6 +149,13 @@ public class ServerUPD extends Thread implements ClientToServerUdpProtocol {
 
 	@Override
 	public void msgAck(String emetteur, String timestamp) {
+		this.client.printConsole("Message with timestamp <" + timestamp + "> send by <" + emetteur + "> is aknowledged.");
+		for (MessageUDP m : this.client.getMsgToBeAcknowledge()) {
+			if (m.getIdMsg().equals(emetteur + timestamp)) {
+				m.setAck(true);
+				return;
+			}
+		}
 		/*
 		if (this.client.addMsg().containsKey(emetteur + timestamp)) {
 			this.client.printConsole("Message from <" + emetteur + "> with timestamp <" + timestamp + "> is aknowledged.");

@@ -27,7 +27,7 @@ public class Client implements ServerTcpToClientProtocol, ClientToServerTcpProto
 	private ClientGui gui;
 	private ServerUPD serverUDP;
 	//private Map<String, MessageUDP> acknowledgementMsg = new HashMap<String, MessageUDP>();
-	private ArrayList<MessageUDP> acknowledgementMsg = new ArrayList<>();
+	private ArrayList<MessageUDP> msgToBeAcknowledge = new ArrayList<>();
 	private Map<String, ArrayList<MessageChat>> chatMsg = new HashMap<String, ArrayList<MessageChat>>();
 
 	public Client(int port) throws UnknownHostException, IOException {
@@ -428,9 +428,9 @@ public class Client implements ServerTcpToClientProtocol, ClientToServerTcpProto
     	Collections.sort(this.chatMsg.get(conv));
     	for (MessageChat mc : this.chatMsg.get(conv)) {
     		if (mc.getEmetteur().equals(this.name))
-    			c += "[TO]  ";
+    			c += "[TO] ";
     		else
-    			c += "[FROM]";
+    			c += "[FROM] ";
     		c += mc.getContent() + "\n";
     	}
     	return c;
@@ -442,8 +442,8 @@ public class Client implements ServerTcpToClientProtocol, ClientToServerTcpProto
     	this.gui.refreshConv(conv, this.buildConv(conv));
     }
     
-    public void addMsgAcknoledgement(MessageUDP msg) {
-    	this.acknowledgementMsg.add(msg);
+    public void addMsgToBeAcknowledge(MessageUDP msg) {
+    	this.msgToBeAcknowledge.add(msg);
     }
     /*
     public getAckMsg() {
@@ -457,8 +457,8 @@ public class Client implements ServerTcpToClientProtocol, ClientToServerTcpProto
     }
     */
     
-    public ArrayList<MessageUDP> getAckMsg() {
-    	return this.acknowledgementMsg;
+    public ArrayList<MessageUDP> getMsgToBeAcknowledge() {
+    	return this.msgToBeAcknowledge;
     }
 
     /*
