@@ -14,6 +14,9 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
+import protocol.ClientToServerTcpProtocol;
+import protocol.ServerTcpToClientProtocol;
+
 public class Client implements ServerTcpToClientProtocol, ClientToServerTcpProtocol {
 
 	private Socket s = null;
@@ -96,7 +99,7 @@ public class Client implements ServerTcpToClientProtocol, ClientToServerTcpProto
 			this.connectKo();
 			break;
 		case "POST_ANC_OK":
-			this.postAncOk();
+			this.postAncOk(parsed[1]);
 			break;
 		case "POST_ANC_KO":
 			this.postAncKo();
@@ -157,6 +160,7 @@ public class Client implements ServerTcpToClientProtocol, ClientToServerTcpProto
 		this.s.close();
 		this.writer.close();
 		this.os.close();
+		this.gui.updateIsConnected();
 	}
 
 	private void openConnexion() throws UnknownHostException, IOException {
@@ -304,8 +308,8 @@ public class Client implements ServerTcpToClientProtocol, ClientToServerTcpProto
 	}
 
 	@Override
-	public void postAncOk() {
-		this.printConsole("Annonce succesfully created.");
+	public void postAncOk(String idAnnonce) {
+		this.printConsole("Annonce with id <" + idAnnonce + "> succesfully created.");
 	}
 
 	@Override
@@ -445,27 +449,10 @@ public class Client implements ServerTcpToClientProtocol, ClientToServerTcpProto
     public void addMsgToBeAcknowledge(MessageUDP msg) {
     	this.msgToBeAcknowledge.add(msg);
     }
-    /*
-    public getAckMsg() {
-    	
-    }*/
-    /*
-    public void aknoledgeMsg() {
-    	for (MessageUDP m : this.acknowledgementMsg) {
-    		
-    	}
-    }
-    */
     
     public ArrayList<MessageUDP> getMsgToBeAcknowledge() {
     	return this.msgToBeAcknowledge;
     }
-
-    /*
-    public Map<String, ArrayList<MessageUDP>> MsgAcknoledgement() {
-    	return this.chatMsg;
-    }
-    */
     
     public static void main(String[] args ) throws IOException {
 		Client c = new Client(1027);
@@ -475,8 +462,5 @@ public class Client implements ServerTcpToClientProtocol, ClientToServerTcpProto
 		if (!this.gui.existsConv(emetteur))
 			this.gui.addConv(emetteur);
 		this.addMsgChat(emetteur, new MessageChat(emetteur, msg, Long.parseLong(timestamp)));
-		//this.chatMsg.put(emetteur, timestamp + "." + msg);
-		//this.addMsg(emetteur,  new MessageUDP(msg, Long.parseLong(timestamp)));
-		//this.gui.writeTabbedPane(emetteur, this.chatMsg.get(emetteur));
 	}
 }

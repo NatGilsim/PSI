@@ -522,13 +522,17 @@ public class ClientGui extends javax.swing.JFrame {
         this.client.requestIP(id);
     }                                                   
 
-    private void sendButtonActionPerformed(java.awt.event.ActionEvent evt) {                                           
-    	try {
-		        this.client.sendMessage(this.tabbebPane.getTitleAt(this.tabbebPane.getSelectedIndex()), this.msgText.getText());
-		} catch (IOException e) {
-		        e.printStackTrace();
-		}
-    this.msgText.setText("");
+    private void sendButtonActionPerformed(java.awt.event.ActionEvent evt) {          
+    	if (this.msgText.getText().getBytes().length >= 1024)
+    		this.printConsole("Le message à envoyé est trop long (1024 bytes maximum).");
+    	else {
+	    	try {
+			        this.client.sendMessage(this.tabbebPane.getTitleAt(this.tabbebPane.getSelectedIndex()), this.msgText.getText());
+			} catch (IOException e) {
+			        e.printStackTrace();
+			}
+	    	this.msgText.setText("");
+    	}
     }                                          
 
     private void tabbebPaneStateChanged(javax.swing.event.ChangeEvent evt) {                                        

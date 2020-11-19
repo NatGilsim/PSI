@@ -1,5 +1,7 @@
 package server;
 
+import java.util.stream.Stream;
+
 public enum Domain {
 	Téléphone,
 	Voiture,
@@ -7,5 +9,9 @@ public enum Domain {
 	Appartement,
 	Meuble,
 	Vêtement,
-	Ordinateur
+	Ordinateur;
+	
+	static public String[] getTabDomains() {
+		return Stream.of(Domain.values()).map(Domain::name).toArray(String[]::new);
+	}
 }

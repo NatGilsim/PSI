@@ -1,4 +1,4 @@
-package client;
+package protocol;
 
 public interface ClientToServerTcpProtocol {
     public void connect(String name);

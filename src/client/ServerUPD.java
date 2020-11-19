@@ -156,14 +156,6 @@ public class ServerUPD extends Thread implements ClientToServerUdpProtocol {
 				return;
 			}
 		}
-		/*
-		if (this.client.addMsg().containsKey(emetteur + timestamp)) {
-			this.client.printConsole("Message from <" + emetteur + "> with timestamp <" + timestamp + "> is aknowledged.");
-			this.client.addMsg().get(emetteur + timestamp).setAck(true);
-		}
-		*/
-		//this.client.printConsole("Message from <" + emetteur + "> with timestamp <" + timestamp + "> is aknowledged.");
-		
 	}
 	
 }
