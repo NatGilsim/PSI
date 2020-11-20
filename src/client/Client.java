@@ -36,49 +36,7 @@ public class Client implements ServerTcpToClientProtocol, ClientToServerTcpProto
 	public Client(int port) throws UnknownHostException, IOException {
 		this.port = port;
 		this.quit = false;
-		Thread inCmd = new Thread(new Runnable() {
-			@Override
-			public void run() {
-			String cmd = "", input = "";
-			BufferedReader buffReader = null;
-				if (s != null) {
-					try {
-						buffReader = new BufferedReader(new InputStreamReader(s.getInputStream()));
-					} catch (IOException e1) {
-						e1.printStackTrace();
-					}
-					while (!s.isClosed()) {
-						cmd = "";
-						try {
-							do {
-								input = buffReader.readLine();
-								if (input != null) {
-									// connection is brutaly interrupted from the server
-									cmd += input + "\n";
-								} else {
-									closeConnexion();
-									printConsole("Connexion with server shutdown.");
-									token = null; // token must be reinitialize since server has lost all tokens
-									break;
-								}
-							} while (!input.equals("."));
-						} catch (IOException e) {
-							if (!quit)
-								 // socket is close but it should not
-								e.printStackTrace();
-
-						}
-						if (!cmd.equals(""))
-							try {
-								processInput(cmd);
-							} catch (IOException e) {
-								e.printStackTrace();
-							}
-					}
-				}
-			}
-		});
-		inputCmd = inCmd;
+		//inputCmd = new Thread(inCmd);
 	    this.gui = new ClientGui(this);
 	    this.gui.setVisible(true);
 	}
@@ -181,6 +139,48 @@ public class Client implements ServerTcpToClientProtocol, ClientToServerTcpProto
     
     @Override
 	public void connect(String name) {
+    	Thread inCmd = new Thread(new Runnable() {
+			@Override
+			public void run() {
+			String cmd = "", input = "";
+			BufferedReader buffReader = null;
+				if (s != null) {
+					try {
+						buffReader = new BufferedReader(new InputStreamReader(s.getInputStream()));
+					} catch (IOException e1) {
+						e1.printStackTrace();
+					}
+					while (!s.isClosed()) {
+						cmd = "";
+						try {
+							do {
+								input = buffReader.readLine();
+								if (input != null) {
+									// connection is brutaly interrupted from the server
+									cmd += input + "\n";
+								} else {
+									closeConnexion();
+									printConsole("Connexion with server shutdown.");
+									token = null; // token must be reinitialize since server has lost all tokens
+									break;
+								}
+							} while (!input.equals("."));
+						} catch (IOException e) {
+							if (!quit)
+								 // socket is close but it should not
+								e.printStackTrace();
+
+						}
+						if (!cmd.equals(""))
+							try {
+								processInput(cmd);
+							} catch (IOException e) {
+								e.printStackTrace();
+							}
+					}
+				}
+			}
+		});
 		this.name = name;
 		try {
 			openConnexion();
@@ -203,6 +203,9 @@ public class Client implements ServerTcpToClientProtocol, ClientToServerTcpProto
 			this.writer.println(token);
 			this.writer.println(".");
 		}
+		inputCmd = new Thread(inCmd);
+		System.out.println("alive:" + inputCmd.isAlive());
+		System.out.println("interrupt: " + inputCmd.isAlive());
 		inputCmd.start();
 	}
     
@@ -210,6 +213,8 @@ public class Client implements ServerTcpToClientProtocol, ClientToServerTcpProto
     public void disconnect() {
     	this.writer.println("DISCONNECT");
     	this.writer.println(".");
+    	this.inputCmd.interrupt();
+    	this.serverUDP.stopServer();
         this.quit = true;
     }
 

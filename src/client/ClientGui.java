@@ -444,6 +444,8 @@ public class ClientGui extends javax.swing.JFrame {
 
     private void disconnectButtonActionPerformed(java.awt.event.ActionEvent evt) {                                                 
         this.client.disconnect();
+        this.nameText.setEnabled(true);
+        this.nameText.setEditable(true);
         this.ipText.setEnabled(true);
         this.connectButton.setEnabled(true);
         this.disconnectButton.setEnabled(false);

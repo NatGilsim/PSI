@@ -1,6 +1,6 @@
 JC = javac
 
-all : Client.class Server.class Protocol.class
+all : Protocol.class Client.class Server.class
 
 Client.class : client/*.java
 	$(JC) client/*.java

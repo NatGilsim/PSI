@@ -19,6 +19,7 @@ public class ServerUPD extends Thread implements ClientToServerUdpProtocol {
 	private Client client;
 	private Map<String, InetAddress> peers = new HashMap<String, InetAddress>();
 	private int limitAck = 5;
+	private boolean stop = false;
 	
 	public ServerUPD(Client client) throws IOException {
 		this.senderSock = new DatagramSocket(7201);
@@ -31,13 +32,14 @@ public class ServerUPD extends Thread implements ClientToServerUdpProtocol {
 	@Override
 	public void run() {
 		String input = null;
-		while (true) {
+		while (!stop) {
 			data = new byte[1024];
 			dpReceive = new DatagramPacket(data, data.length);
 			try {
 				senderSock.receive(dpReceive);
 			} catch (IOException e) {
-				e.printStackTrace();
+				if (stop == false)
+					System.out.println("Problem.");
 			}
 			input = new String(dpReceive.getData(), 0, dpReceive.getLength());
 			processInput(input, dpReceive.getAddress());
@@ -66,6 +68,11 @@ public class ServerUPD extends Thread implements ClientToServerUdpProtocol {
 			this.client.printConsole("Server UDP receive an unknow method <" + parsed[0] + ">.");
 			break;
 		}
+	}
+	
+	public void stopServer() {
+		this.stop = true;
+		senderSock.close();
 	}
 
 	private void sendAck(String emetteur, String timestamp) throws IOException {
