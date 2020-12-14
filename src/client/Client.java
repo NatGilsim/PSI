@@ -204,8 +204,8 @@ public class Client implements ServerTcpToClientProtocol, ClientToServerTcpProto
 			this.writer.println(".");
 		}
 		inputCmd = new Thread(inCmd);
-		System.out.println("alive:" + inputCmd.isAlive());
-		System.out.println("interrupt: " + inputCmd.isAlive());
+		//System.out.println("alive:" + inputCmd.isAlive());
+		//System.out.println("interrupt: " + inputCmd.isAlive());
 		inputCmd.start();
 	}
     
